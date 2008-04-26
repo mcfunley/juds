@@ -1,0 +1,128 @@
+===
+JUDS
+====
+
+
+ABSTRACT
+========
+
+Java Unix Domain Sockets (JUDS) provide classes to address the need in Java
+for accessing Unix domain sockets. The source is provided for a shared library
+containing the compiled native C code, which is called into by the Java
+UnixDomainSocket classes via JNI (Java Native Interface) to open, close, unlink
+(delete), read, and write to Unix domain sockets.
+
+
+VERSION
+=======
+
+Version 0.5 - 2008-03-05
+
+
+HISTORY
+=======
+
+Version History:
+	0.5 - 2008-03-05 initial version
+
+
+INSTALLATION
+============
+
+The java UnixDomainSocket classes use native methods in order to access AF_UNIX
+sockets for interprocess communication. JUDS can be installed by using the
+included makefile.
+IMPORTANT NOTE:  In order for the compilation process to work, it is likely
+that you need to change one or more of the top four variables in the makefile.
+
+A installation process could look like this:
+
+	make
+	make install
+
+make install does only copy the shared library libunixdomainsocket.so to the
+/usr/lib directory. Alternatively you can also set the variable LD_LIBRARY_PATH
+so that includes the directory where libunixdomainsocket.so is included.
+
+
+TESTING
+=======
+
+To test the installation, the file TestUnixDomainSocket.java has to be
+compiled. This can be done by simply entering:
+
+	make test
+
+Now a test can be performed through first executing the included python program
+Test_UnixDomainSocket.py with a socket filename as command line argument.
+For example, this could look like this:
+
+	python Test_UnixDomainSocket.py socketfile
+
+Then the Java class file TestUnixDomainSocket.class has to be executed, also
+with the same socket filename as above as command line argument, e.g.:
+
+	java TestUnixDomainSocket socketfile
+
+
+DESCRIPTION
+===========
+
+JUDS is similar with and inspired of J-BUDS. However, JUDS has been written to
+have more performance than J-BUDS while supplying all features Unix domain
+sockets have.
+JUDS consists of an abstract class UnixDomainSocket and two derived classes,
+UnixDomainSocketClient and UnixDomainSocketServer. It can simply be used by
+instantiating one the two classes. Through the getInputStream and
+getOutputStream methods, the resulting instance can be used to get an
+InputStream and/or OutputStream object.
+
+Limitations:
+
+Datagram sockets are unidirectional, i.e. trying to get an OutputStream for an
+UnixDomainSocketServer object results in an UnsupportedOperationException being
+thrown. Accordinly trying to get an InputStream for an UnixDomainSocketClient
+also results in such an exception being thrown.
+Stream sockets can only handle connections between two end points. Trying to
+connect to an UnixDomainSocketServer which has already accepted a connection
+with another client will result in an error.
+
+
+TROUBLESHOOTING
+===============
+
+Please send bug reports and comments to klaus.trainer@web.de
+
+
+LICENSE
+=======
+
+This library is free software; you can redistribute it and/or modify it under
+the terms of version 2.1 of the GNU Lesser General Public License as published
+by the Free Software Foundation.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Lesser General Public License for more details:
+
+http://www.opensource.org/licenses/lgpl-license.html
+http://www.gnu.org/copyleft/lesser.html
+
+To obtain a written copy of the GNU Lesser General Public License,
+please write to the Free Software Foundation, Inc., 59 Temple Place, 
+Suite 330, Boston, MA  02111-1307 USA
+
+
+AUTHOR
+======
+
+Klaus Trainer
+
+
+ACKNOWLEDGMENTS
+===============
+
+JUDS has been inspired by Robert Morgan's J-BUDS (Java Based Unix Domain
+Sockets) which is licensed under the GNU Lesser General Public License
+version 2.1 as well.
