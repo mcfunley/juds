@@ -8,7 +8,7 @@ import java.io.OutputStream;
 
 /**
  * 
- * This class provides a means of using unix domain socket client/server
+ * This class provides a means of using Unix domain socket client/server
  * connections in Java
  * 
  * @author Klaus Trainer
@@ -43,7 +43,7 @@ public abstract class UnixDomainSocket {
 
 	private int timeout;
 
-	// Native methods implemented in the Unix Domain Socket C library
+	// Native methods implemented in the Unix domain socket C library
 	protected native static int nativeCreate(String socketFile, int socketType);
 
 	protected native static int nativeOpen(String socketFile, int socketType);
@@ -133,7 +133,7 @@ public abstract class UnixDomainSocket {
 				// blocked longer than the specified timeout
 				if (thread.isAlive()) {
 					throw new InterruptedIOException(
-							"Unix Domain Socket read() call timed out");
+							"Unix domain socket read() call timed out");
 				} else {
 					count = thread.getData();
 				}
@@ -173,7 +173,7 @@ public abstract class UnixDomainSocket {
 				// blocked longer than the specified timeout
 				if (thread.isAlive()) {
 					throw new InterruptedIOException(
-							"Unix Domain Socket read() call timed out");
+							"Unix domain socket read() call timed out");
 				} else {
 					count = thread.getData();
 				}
@@ -197,7 +197,7 @@ public abstract class UnixDomainSocket {
 			byte[] data = new byte[1];
 			data[0] = (byte) b;
 			if (nativeWrite(nativeSocketFileHandle, data, 0, 1) != 1)
-				throw new IOException("Unable to write to unix domain socket");
+				throw new IOException("Unable to write to Unix domain socket");
 		}
 
 		@Override
@@ -211,7 +211,7 @@ public abstract class UnixDomainSocket {
 				return;
 			}
 			if (nativeWrite(nativeSocketFileHandle, b, off, len) != len)
-				throw new IOException("Unable to write to unix domain socket");
+				throw new IOException("Unable to write to Unix domain socket");
 		}
 
 		// Closes the socket output stream
