@@ -40,9 +40,10 @@ A installation process could look like this:
 	make
 	make install
 
-make install does only copy the shared library libunixdomainsocket.so to the
-/usr/lib directory. Alternatively you can also set the variable LD_LIBRARY_PATH
-so that includes the directory where libunixdomainsocket.so is included.
+make install does nothing more than copying the shared library
+libunixdomainsocket.so to the /usr/lib directory. Alternatively you can also
+set the variable LD_LIBRARY_PATH so that includes the directory where
+libunixdomainsocket.so is included.
 
 
 TESTING
@@ -68,7 +69,7 @@ with the same socket filename as above as command line argument, e.g.:
 DESCRIPTION
 ===========
 
-JUDS is similar with and inspired of J-BUDS. However, JUDS has been written to
+JUDS is similar with and inspired by J-BUDS. However, JUDS has been written to
 have more performance than J-BUDS while supplying all features Unix domain
 sockets have.
 JUDS consists of an abstract class UnixDomainSocket and two derived classes,
