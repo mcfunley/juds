@@ -60,8 +60,8 @@ For example, this could look like this:
 
 	python Test_UnixDomainSocket.py socketfile
 
-Then the Java class file TestUnixDomainSocket.class has to be executed, also
-with the same socket filename as above as command line argument, e.g.:
+Accordingly, the Java class file TestUnixDomainSocket.class has to be executed
+with the same socket filename as above for command line argument, e.g.:
 
 	java TestUnixDomainSocket socketfile
 
@@ -74,7 +74,7 @@ have more performance than J-BUDS while supplying all features Unix domain
 sockets have.
 JUDS consists of an abstract class UnixDomainSocket and two derived classes,
 UnixDomainSocketClient and UnixDomainSocketServer. It can simply be used by
-instantiating one the two classes. Through the getInputStream and
+instantiating one of the two classes. Through the getInputStream and
 getOutputStream methods, the resulting instance can be used to get an
 InputStream and/or OutputStream object.
 
@@ -82,7 +82,7 @@ Limitations:
 
 Datagram sockets are unidirectional, i.e. trying to get an OutputStream for an
 UnixDomainSocketServer object results in an UnsupportedOperationException being
-thrown. Accordinly trying to get an InputStream for an UnixDomainSocketClient
+thrown. Accordingly trying to get an InputStream for an UnixDomainSocketClient
 also results in such an exception being thrown.
 Stream sockets can only handle connections between two end points. Trying to
 connect to an UnixDomainSocketServer which has already accepted a connection
