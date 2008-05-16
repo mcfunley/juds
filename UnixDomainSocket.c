@@ -18,10 +18,12 @@
 #define ASSERTNOERR(cond, msg) do { \
 	if (cond) { perror(msg); return -1; }} while(0)
 
+#define SOCK_TYPE(type) ((type) == 0 ? SOCK_DGRAM : SOCK_STREAM)
+
 JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 							  jclass jClass,
 							  jstring jSocketFile,
-							  jint jsocketType)
+							  jint jSocketType)
 {
 	int s;			/* socket file handle */
 	struct sockaddr_un sa;
@@ -30,10 +32,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 	    (*jEnv)->GetStringUTFChars(jEnv, jSocketFile, NULL);
 
 	/* create the socket */
-	if (jsocketType == 0)
-		s = socket(PF_UNIX, SOCK_DGRAM, 0);
-	else
-		s = socket(PF_UNIX, SOCK_STREAM, 0);
+	s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
 	ASSERTNOERR(s == -1, "nativeCreate: socket");
 	sa.sun_family = AF_UNIX;
 	strcpy(sa.sun_path, socketFile);
@@ -42,7 +41,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 	/* bind to the socket; here the socket file is created */
 	ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
 		    "nativeCreate: bind");
-	if (jsocketType == 1) {
+	if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
 		ASSERTNOERR(listen(s, 0) == -1, "nativeCreate: listen");
 		s = accept(s, (struct sockaddr *)&sa, &salen);
 		ASSERTNOERR(s == -1, "nativeCreate: accept");
@@ -65,10 +64,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 	const char *socketFile =
 	    (*jEnv)->GetStringUTFChars(jEnv, jSocketFile, NULL);
 
-	if (jSocketType == 0)
-		s = socket(PF_UNIX, SOCK_DGRAM, 0);
-	else
-		s = socket(PF_UNIX, SOCK_STREAM, 0);
+	s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
 	ASSERTNOERR(s == -1, "nativeOpen: socket");
 	sa.sun_family = AF_UNIX;
 	strcpy(sa.sun_path, socketFile);
