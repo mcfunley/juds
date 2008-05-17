@@ -18,6 +18,8 @@
 #define ASSERTNOERR(cond, msg) do { \
 	if (cond) { perror(msg); return -1; }} while(0)
 
+/* In the class UnixDomainSocket SOCK_DGRAM and SOCK_STREAM correspond to the
+ * constant values 0 and 1; SOCK_TYPE replaces them with the respective macro */
 #define SOCK_TYPE(type) ((type) == 0 ? SOCK_DGRAM : SOCK_STREAM)
 
 JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
@@ -49,7 +51,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 
 	(*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
 
-	/* Return the socket file handle */
+	/* return the socket file handle */
 	return s;
 }
 
