@@ -16,6 +16,10 @@ UnixDomainSocket classes via JNI (Java Native Interface) to open, close, unlink
 VERSION
 =======
 
+Version 0.6 - 2008-06-03
+    - Made some minor refactoring and orthographical corrections.
+      No difference in functional to version 0.5.
+
 Version 0.5 - 2008-03-05
 
 
