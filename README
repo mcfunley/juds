@@ -17,14 +17,14 @@ VERSION
 =======
 
 Version 0.6 - 2008-06-03
-    - Made some minor refactoring and orthographical corrections.
-      No difference in functional to version 0.5.
-
-Version 0.5 - 2008-03-05
 
 
 HISTORY
 =======
+
+Version 0.6 - 2008-06-03
+    - Made some minor refactoring and orthographical corrections.
+      No difference in functional to version 0.5.
 
 Version History:
 	0.5 - 2008-03-05 initial version
