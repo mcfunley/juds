@@ -1,7 +1,7 @@
 CC = gcc
 PLAT = linux
 JAVA_HOME = /usr/lib/jvm/java-6-sun/include
-INCLUDEPATH = -I$(JAVA_HOME)/include/$(PLAT)
+INCLUDEPATH = -I $(JAVA_HOME)/include -I $(JAVA_HOME)/include/$(PLAT)
 JAVA_FLAGS =
 
 all: UnixDomainSocket.class UnixDomainSocketClient.class \
@@ -20,7 +20,7 @@ UnixDomainSocket.h: UnixDomainSocket$1.class
 	javah UnixDomainSocket
 
 libunixdomainsocket.so: UnixDomainSocket.h UnixDomainSocket.c
-	$(CC) -shared -c $(INCLUDEPATH) -o libunixdomainsocket.so UnixDomainSocket.c
+	$(CC) -shared -fPIC $(INCLUDEPATH) -o libunixdomainsocket.so UnixDomainSocket.c
 
 install:
 	cp libunixdomainsocket.so /usr/lib
