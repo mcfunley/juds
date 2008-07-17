@@ -13,63 +13,6 @@ UnixDomainSocket classes via JNI (Java Native Interface) to open, close, unlink
 (delete), read, and write to Unix domain sockets.
 
 
-VERSION
-=======
-
-Version 0.6 - 2008-06-03
-
-
-HISTORY
-=======
-
-Version 0.6 - 2008-06-03
-    - Made some minor refactoring and orthographical corrections.
-      No difference in functional to version 0.5.
-
-Version History:
-	0.5 - 2008-03-05 initial version
-
-
-INSTALLATION
-============
-
-The java UnixDomainSocket classes use native methods in order to access AF_UNIX
-sockets for interprocess communication. JUDS can be installed by using the
-included makefile.
-IMPORTANT NOTE:  In order for the compilation process to work, it is likely
-that you need to change one or more of the top four variables in the makefile.
-
-A installation process could look like this:
-
-	make
-	make install
-
-make install does nothing more than copying the shared library
-libunixdomainsocket.so to the /usr/lib directory. Alternatively you can also
-set the variable LD_LIBRARY_PATH so that includes the directory where
-libunixdomainsocket.so is included.
-
-
-TESTING
-=======
-
-To test the installation, the file TestUnixDomainSocket.java has to be
-compiled. This can be done by simply entering:
-
-	make test
-
-Now a test can be performed through first executing the included python program
-Test_UnixDomainSocket.py with a socket filename as command line argument.
-For example, this could look like this:
-
-	python Test_UnixDomainSocket.py socketfile
-
-Accordingly, the Java class file TestUnixDomainSocket.class has to be executed
-with the same socket filename as above for command line argument, e.g.:
-
-	java TestUnixDomainSocket socketfile
-
-
 DESCRIPTION
 ===========
 
@@ -93,10 +36,78 @@ connect to an UnixDomainSocketServer which has already accepted a connection
 with another client will result in an error.
 
 
+VERSION
+=======
+
+Version 0.7 - 2008-07-17
+
+
+VERSION HISTORY
+===============
+
+Version 0.7 - 2008-07-16
+    - Made changes to the makefile. This fixes some issues for building under
+      non-Linux platforms.
+    - Added a note how to fix an issue under cygwin to the documentation.
+    - Restructured the documentation.
+
+Version 0.6 - 2008-06-03
+    - Made some minor refactoring and orthographical corrections.
+      No difference in functional to version 0.5.
+
+Version 0.5 - 2008-03-05
+    - Initial version
+
+
+INSTALLATION
+============
+
+The java UnixDomainSocket classes use native methods in order to access AF_UNIX
+sockets for interprocess communication. JUDS can be installed by using the
+included makefile.
+IMPORTANT NOTE:  In order for the compilation process to work, it is likely
+that you need to change one or more of the top four variables in the makefile.
+
+A installation process could look like this:
+
+	make
+	make install
+
+make install does nothing more than copying the shared library
+libunixdomainsocket.so to the /usr/lib directory. Alternatively you can also
+set the variable LD_LIBRARY_PATH so that includes the directory where
+libunixdomainsocket.so is included.
+
+
 TROUBLESHOOTING
 ===============
 
-Please send bug reports and comments to klaus.trainer@web.de
+There might be issues with gcc under cygwin because the type __int64 used in
+jni.h is not defined. Here are some proposals how that can be fixed:
+http://maba.wordpress.com/2004/07/28/generating-dll-files-for-jni-under-windowscygwingcc/
+(see also the comments)
+
+Please send bug reports and comments to klaus.trainer@web.de.
+
+
+TESTING
+=======
+
+To test the installation, the file TestUnixDomainSocket.java has to be
+compiled. This can be done by simply entering:
+
+	make test
+
+Now a test can be performed through first executing the included python program
+Test_UnixDomainSocket.py with a socket filename as command line argument.
+For example, this could look like this:
+
+	python Test_UnixDomainSocket.py socketfile
+
+Accordingly, the Java class file TestUnixDomainSocket.class has to be executed
+with the same socket filename as above for command line argument, e.g.:
+
+	java TestUnixDomainSocket socketfile
 
 
 LICENSE
