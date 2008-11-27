@@ -142,7 +142,7 @@ public abstract class UnixDomainSocket {
 				if (count == -1)
 					throw new IOException();
 			}
-			return (int) b[0];
+			return count > 0 ? (int) b[0] : -1;
 		}
 
 		@Override
