@@ -1,35 +1,55 @@
+SHELL = /bin/sh
+VERSION = 0.8
+PACKAGE = com.google.code.juds
+PACKAGE_DIR = com/google/code/juds
+TEST_SOCKET_FILE = JUDS_TEST_SOCKET_FILE
 CC = gcc
 PLAT = linux
-JAVA_HOME = /usr/lib/jvm/java-6-sun/include
+JAVA_HOME = /usr/lib/jvm/java-6-sun
 INCLUDEPATH = -I $(JAVA_HOME)/include -I $(JAVA_HOME)/include/$(PLAT)
-JAVA_FLAGS =
+PREFIX = /usr
+CFLAGS = -O2 -Wall
+JAVA_FLAGS = -g:none -deprecation -target 1.6
 
-all: UnixDomainSocket.class UnixDomainSocketClient.class \
-	UnixDomainSocketServer.class libunixdomainsocket.so
 
-UnixDomainSocket$1.class: UnixDomainSocket.java
-	javac $(JAVA_FLAGS) UnixDomainSocket.java
+all: jar libunixdomainsocket.so
 
-UnixDomainSocketClient.class: UnixDomainSocketClient.java
-	javac $(JAVA_FLAGS) UnixDomainSocketClient.java
+jar: juds-$(VERSION).jar
 
-UnixDomainSocketServer.class: UnixDomainSocketServer.java
-	javac $(JAVA_FLAGS) UnixDomainSocketServer.java
+juds-$(VERSION).jar: $(PACKAGE_DIR)/UnixDomainSocket.class $(PACKAGE_DIR)/UnixDomainSocketClient.class $(PACKAGE_DIR)/UnixDomainSocketServer.class
+	$(JAVA_HOME)/bin/jar -cf $@ $(PACKAGE_DIR)/*.class
 
-UnixDomainSocket.h: UnixDomainSocket$1.class
-	javah UnixDomainSocket
+libunixdomainsocket.so: $(PACKAGE_DIR)/UnixDomainSocket.c $(PACKAGE_DIR)/UnixDomainSocket.h
+	$(CC) $(CFLAGS) -shared -fPIC $(INCLUDEPATH) -o $@ $< 
 
-libunixdomainsocket.so: UnixDomainSocket.h UnixDomainSocket.c
-	$(CC) -shared -fPIC $(INCLUDEPATH) -o libunixdomainsocket.so UnixDomainSocket.c
+$(PACKAGE_DIR)/UnixDomainSocket.h: $(PACKAGE).UnixDomainSocket
+	$(JAVA_HOME)/bin/javah -o $@ $<
 
-install:
-	cp libunixdomainsocket.so /usr/lib
+$(PACKAGE).UnixDomainSocket: $(PACKAGE_DIR)/UnixDomainSocket.class
+
+$(PACKAGE_DIR)/UnixDomainSocket.class: $(PACKAGE_DIR)/UnixDomainSocket.java
+	$(JAVA_HOME)/bin/javac $(JAVA_FLAGS) $?
+
+$(PACKAGE_DIR)/UnixDomainSocketClient.class: $(PACKAGE_DIR)/UnixDomainSocketClient.java
+	$(JAVA_HOME)/bin/javac $(JAVA_FLAGS) $?
+
+$(PACKAGE_DIR)/UnixDomainSocketServer.class: $(PACKAGE_DIR)/UnixDomainSocketServer.java
+	$(JAVA_HOME)/bin/javac $(JAVA_FLAGS) $?
+
+install: libunixdomainsocket.so
+	cp libunixdomainsocket.so $(PREFIX)/lib
 
 uninstall:
-	rm -f /usr/lib/libunixdomainsocket.so
+	rm -f $(PREFIX)/lib/libunixdomainsocket.so
 
-test: TestUnixDomainSocket.java all
-	javac $(JAVA_FLAGS) TestUnixDomainSocket.java
+test: $(PACKAGE_DIR)/test/TestUnixDomainSocket.class
+	python $(PACKAGE_DIR)/test/TestUnixDomainSocket.py $(TEST_SOCKET_FILE) &
+	@sleep 2
+	java $(PACKAGE).test.TestUnixDomainSocket $(TEST_SOCKET_FILE)
+	rm -f $(TEST_SOCKET_FILE)
+
+$(PACKAGE_DIR)/test/TestUnixDomainSocket.class: $(PACKAGE_DIR)/test/TestUnixDomainSocket.java jar
+	$(JAVA_HOME)/bin/javac -cp juds-$(VERSION).jar $(JAVA_FLAGS) $<
 
 clean:
-	rm -f *.class *.so *.o
+	rm -f $(PACKAGE_DIR)/*.class $(PACKAGE_DIR)/test/*.class $(PACKAGE_DIR)/*.h *.so *.jar $(TEST_SOCKET_FILE)

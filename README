@@ -99,10 +99,10 @@ compiled. This can be done by simply entering:
 	make test
 
 Now a test can be performed through first executing the included python program
-Test_UnixDomainSocket.py with a socket filename as command line argument.
+TestUnixDomainSocket.py with a socket filename as command line argument.
 For example, this could look like this:
 
-	python Test_UnixDomainSocket.py socketfile
+	python TestUnixDomainSocket.py socketfile
 
 Accordingly, the Java class file TestUnixDomainSocket.class has to be executed
 with the same socket filename as above for command line argument, e.g.:
