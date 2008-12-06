@@ -22,12 +22,14 @@
  * constant values 0 and 1; SOCK_TYPE replaces them with the respective macro */
 #define SOCK_TYPE(type) ((type) == 0 ? SOCK_DGRAM : SOCK_STREAM)
 
-JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
-							  jclass jClass,
-							  jstring jSocketFile,
-							  jint jSocketType)
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
+							jclass jClass,
+							jstring jSocketFile,
+							jint jSocketType)
 {
 	int s;			/* socket file handle */
+	int ret;
 	struct sockaddr_un sa;
 	socklen_t salen;
 	const char *socketFile =
@@ -41,12 +43,17 @@ JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeCreate(J
 	salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
 	umask(0111);		/* read and write access for everybody */
 	/* bind to the socket; here the socket file is created */
-	ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
-		    "nativeCreate: bind");
+	ret = bind(s, (struct sockaddr *)&sa, salen);
+	ASSERTNOERR(ret == -1, "nativeCreate: bind");
 	if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
-		ASSERTNOERR(listen(s, 0) == -1, "nativeCreate: listen");
-		s = accept(s, (struct sockaddr *)&sa, &salen);
-		ASSERTNOERR(s == -1, "nativeCreate: accept");
+		ret = listen(s, 0);
+		if (ret == -1)
+			unlink(socketFile);
+		ASSERTNOERR(ret == -1, "nativeCreate: listen");
+		ret = accept(s, (struct sockaddr *)&sa, &salen);
+		if (ret == -1)
+			unlink(socketFile);
+		ASSERTNOERR(ret == -1, "nativeCreate: accept");
 	}
 
 	(*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
@@ -55,10 +62,11 @@ JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeCreate(J
 	return s;
 }
 
-JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
-							jclass jClass,
-							jstring jSocketFile,
-							jint jSocketType)
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
+						      jclass jClass,
+						      jstring jSocketFile,
+						      jint jSocketType)
 {
 	int s;			/* socket file handle */
 	struct sockaddr_un sa;
@@ -80,11 +88,12 @@ JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNI
 	return s;
 }
 
-JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
-							jclass jClass,
-							jint jSocketFileHandle,
-							jbyteArray jbarr,
-							jint off, jint len)
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
+						      jclass jClass,
+						      jint jSocketFileHandle,
+						      jbyteArray jbarr,
+						      jint off, jint len)
 {
 	ssize_t count;
 	jbyte *cbarr = (*jEnv)->GetByteArrayElements(jEnv, jbarr, NULL);
@@ -100,11 +109,12 @@ JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeRead(JNI
 	return count;
 }
 
-JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeWrite(JNIEnv * jEnv,
-							 jclass jClass,
-							 jint jSocketFileHandle,
-							 jbyteArray jbarr,
-							 jint off, jint len)
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeWrite(JNIEnv * jEnv,
+						       jclass jClass,
+						       jint jSocketFileHandle,
+						       jbyteArray jbarr,
+						       jint off, jint len)
 {
 	ssize_t count;
 	jbyte *cbarr = (*jEnv)->GetByteArrayElements(jEnv, jbarr, NULL);
@@ -120,38 +130,38 @@ JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeWrite(JN
 	return count;
 }
 
-JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeClose(JNIEnv * jEnv,
-							 jclass jClass,
-							 jint jSocketFileHandle)
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeClose(JNIEnv * jEnv,
+						       jclass jClass,
+						       jint jSocketFileHandle)
 {
 	return close(jSocketFileHandle);
 }
 
-JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeCloseInput(JNIEnv *
-							      jEnv,
-							      jclass
-							      jClass,
-							      jint
-							      jSocketFileHandle)
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeCloseInput(JNIEnv * jEnv,
+							    jclass jClass,
+							    jint
+							    jSocketFileHandle)
 {
 	/* close the socket input stream */
 	return shutdown(jSocketFileHandle, SHUT_RD);
 }
 
-JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeCloseOutput(JNIEnv *
-							       jEnv,
-							       jclass
-							       jClass,
-							       jint
-							       jSocketFileHandle)
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeCloseOutput(JNIEnv * jEnv,
+							     jclass jClass,
+							     jint
+							     jSocketFileHandle)
 {
 	/* close the socket output stream */
 	return shutdown(jSocketFileHandle, SHUT_WR);
 }
 
-JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeUnlink(JNIEnv * jEnv,
-							  jclass jClass,
-							  jstring jSocketFile)
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeUnlink(JNIEnv * jEnv,
+							jclass jClass,
+							jstring jSocketFile)
 {
 	int ret;
 	const char *socketFile =
