@@ -22,7 +22,7 @@
  * constant values 0 and 1; SOCK_TYPE replaces them with the respective macro */
 #define SOCK_TYPE(type) ((type) == 0 ? SOCK_DGRAM : SOCK_STREAM)
 
-JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
+JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 							  jclass jClass,
 							  jstring jSocketFile,
 							  jint jSocketType)
@@ -55,7 +55,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 	return s;
 }
 
-JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
+JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 							jclass jClass,
 							jstring jSocketFile,
 							jint jSocketType)
@@ -80,7 +80,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 	return s;
 }
 
-JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
+JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
 							jclass jClass,
 							jint jSocketFileHandle,
 							jbyteArray jbarr,
@@ -100,7 +100,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
 	return count;
 }
 
-JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeWrite(JNIEnv * jEnv,
+JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeWrite(JNIEnv * jEnv,
 							 jclass jClass,
 							 jint jSocketFileHandle,
 							 jbyteArray jbarr,
@@ -120,14 +120,14 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeWrite(JNIEnv * jEnv,
 	return count;
 }
 
-JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeClose(JNIEnv * jEnv,
+JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeClose(JNIEnv * jEnv,
 							 jclass jClass,
 							 jint jSocketFileHandle)
 {
 	return close(jSocketFileHandle);
 }
 
-JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCloseInput(JNIEnv *
+JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeCloseInput(JNIEnv *
 							      jEnv,
 							      jclass
 							      jClass,
@@ -138,7 +138,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCloseInput(JNIEnv *
 	return shutdown(jSocketFileHandle, SHUT_RD);
 }
 
-JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCloseOutput(JNIEnv *
+JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeCloseOutput(JNIEnv *
 							       jEnv,
 							       jclass
 							       jClass,
@@ -149,7 +149,7 @@ JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeCloseOutput(JNIEnv *
 	return shutdown(jSocketFileHandle, SHUT_WR);
 }
 
-JNIEXPORT jint JNICALL Java_UnixDomainSocket_nativeUnlink(JNIEnv * jEnv,
+JNIEXPORT jint JNICALL Java_com_google_code_juds_UnixDomainSocket_nativeUnlink(JNIEnv * jEnv,
 							  jclass jClass,
 							  jstring jSocketFile)
 {

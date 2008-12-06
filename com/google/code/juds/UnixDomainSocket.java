@@ -1,3 +1,5 @@
+package com.google.code.juds;
+
 // UnixDomainSocket.java
 // Inspired by J-BUDS version 1.0
 // See COPYRIGHT file for license details

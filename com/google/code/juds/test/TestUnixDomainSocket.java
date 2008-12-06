@@ -1,6 +1,10 @@
+package com.google.code.juds.test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import com.google.code.juds.*;
 
 public class TestUnixDomainSocket {
 
