@@ -18,7 +18,7 @@ import java.io.OutputStream;
 public abstract class UnixDomainSocket {
 
 	static {
-		// Load the Unix Domain Socket C library
+		// Load the Unix domain socket C library
 		System.loadLibrary("unixdomainsocket");
 	}
 

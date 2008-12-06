@@ -17,7 +17,7 @@ all: jar libunixdomainsocket.so
 jar: juds-$(VERSION).jar
 
 juds-$(VERSION).jar: $(PACKAGE_DIR)/UnixDomainSocket.class $(PACKAGE_DIR)/UnixDomainSocketClient.class $(PACKAGE_DIR)/UnixDomainSocketServer.class
-	$(JAVA_HOME)/bin/jar -cf $@ $(PACKAGE_DIR)/*.class
+	$(JAVA_HOME)/bin/jar cf $@ $(PACKAGE_DIR)/*.class
 
 libunixdomainsocket.so: $(PACKAGE_DIR)/UnixDomainSocket.c $(PACKAGE_DIR)/UnixDomainSocket.h
 	$(CC) $(CFLAGS) -shared -fPIC $(INCLUDEPATH) -o $@ $< 

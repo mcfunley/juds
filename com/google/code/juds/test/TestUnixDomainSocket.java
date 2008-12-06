@@ -17,21 +17,19 @@ public class TestUnixDomainSocket {
 		String socketFile = args[0];
 
 		byte[] b = new byte[128];
+		// Testcase 1.1: Test UnixDomainSocketClient with a stream socket
 		UnixDomainSocketClient socket = new UnixDomainSocketClient(socketFile,
 				UnixDomainSocket.SOCK_STREAM);
 		InputStream in = socket.getInputStream();
 		OutputStream out = socket.getOutputStream();
-		System.out.println("Test #1: Test UnixDomainSocketClient\nTestcase "
-				+ "1.1: Test UnixDomainSocketClient with a stream socket...");
 		in.read(b);
 		System.out.println("Text received: \"" + new String(b) + "\"");
-		String text = "Hello! I'm the client!";
+		String text = "[2] Hello! I'm the client!";
 		out.write(text.getBytes());
 		System.out.println("Text sent: " + "\"" + text + "\"");
 		socket.close();
 
-		System.out.println("Testcase 1.2: Test UnixDomainSocketClient with "
-				+ "a datagram socket...");
+		// Testcase 1.2: Test UnixDomainSocketClient with a datagram socket
 		socket = new UnixDomainSocketClient(socketFile,
 				UnixDomainSocket.SOCK_DGRAM);
 		System.out.println("Provoke and catch an "
@@ -43,25 +41,27 @@ public class TestUnixDomainSocket {
 					+ "thrown as expected.");
 		}
 		out = socket.getOutputStream();
-		text = "Hello! I'm the client!";
+		text = "[3] Hello! I'm the client!";
 		out.write(text.getBytes());
 		System.out.println("Text sent: \"" + text + "\"");
 		socket.close();
 
+		// Testcase 2.1: Test UnixDomainSocketServer with a stream socket
+		System.out.println("\nTest #2: Test UnixDomainSocketServer\nTestcase "
+				+ "2.1: Test UnixDomainSocketServer with a stream socket...");
 		UnixDomainSocketServer ssocket = new UnixDomainSocketServer(socketFile,
 				UnixDomainSocket.SOCK_STREAM);
 		in = ssocket.getInputStream();
 		out = ssocket.getOutputStream();
-		System.out.println("\nTest #2: Test UnixDomainSocketServer\nTestcase "
-				+ "2.1: Test UnixDomainSocketServer with a stream socket...");
 		in.read(b);
 		System.out.println("Text received: \"" + new String(b) + "\"");
-		text = "Hello! I'm the server!";
+		text = "[5] Hello! I'm the server!";
 		out.write(text.getBytes());
 		System.out.println("Text sent: " + "\"" + text + "\"");
 		ssocket.close();
 		ssocket.unlink();
 
+		// Testcase 2.2: Test UnixDomainSocketServer with a datagram socket
 		System.out.println("Testcase 2.2: Test UnixDomainSocketServer with "
 				+ "a datagram socket...");
 		ssocket = new UnixDomainSocketServer(socketFile,
