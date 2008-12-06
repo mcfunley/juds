@@ -39,11 +39,22 @@ with another client will result in an error.
 VERSION
 =======
 
-Version 0.7 - 2008-07-17
+Version 0.8 - 2008-12-06
 
 
 VERSION HISTORY
 ===============
+
+Version 0.8 - 2008-12-06
+    - Fixed UnixDomainSocket.UnixDomainSocketInputStream.read() method in order
+      to return correct results (Thanks to Roman Kosenko!).
+    - Rearranged test, made it more comprehensible. Now the test can be
+      launched by running the make target 'test'. There isn't any additional
+      operation from the user required anymore (Thanks to Roman Kosenko!).
+    - Introduced package structure (com.google.code.juds), improved Makefile.
+    - Added unlink(socketFile) calls in UnixDomainSocket.c for the case of
+      failing listen() or accept() calls to remove the unused socket file
+      (Thanks Alan Harder!).
 
 Version 0.7 - 2008-07-16
     - Made changes to the makefile. This fixes some issues for building under
@@ -93,21 +104,8 @@ Please send bug reports and comments to klaus.trainer@web.de.
 TESTING
 =======
 
-To test the installation, the file TestUnixDomainSocket.java has to be
-compiled. This can be done by simply entering:
-
+To test the installation, simply run the make target 'test':
 	make test
-
-Now a test can be performed through first executing the included python program
-TestUnixDomainSocket.py with a socket filename as command line argument.
-For example, this could look like this:
-
-	python TestUnixDomainSocket.py socketfile
-
-Accordingly, the Java class file TestUnixDomainSocket.class has to be executed
-with the same socket filename as above for command line argument, e.g.:
-
-	java TestUnixDomainSocket socketfile
 
 
 LICENSE
