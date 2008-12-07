@@ -90,6 +90,13 @@ set the variable LD_LIBRARY_PATH so that includes the directory where
 libunixdomainsocket.so is included.
 
 
+TESTING
+=======
+
+To test the installation, simply run the make target 'test':
+	make test
+
+
 TROUBLESHOOTING
 ===============
 
@@ -99,13 +106,6 @@ http://maba.wordpress.com/2004/07/28/generating-dll-files-for-jni-under-windowsc
 (see also the comments)
 
 Please send bug reports and comments to klaus.trainer@web.de.
-
-
-TESTING
-=======
-
-To test the installation, simply run the make target 'test':
-	make test
 
 
 LICENSE
