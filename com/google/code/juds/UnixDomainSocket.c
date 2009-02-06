@@ -43,17 +43,12 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 	salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
 	umask(0111);		/* read and write access for everybody */
 	/* bind to the socket; here the socket file is created */
-	ret = bind(s, (struct sockaddr *)&sa, salen);
-	ASSERTNOERR(ret == -1, "nativeCreate: bind");
+	ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
+		    "nativeCreate: bind");
 	if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
-		ret = listen(s, 0);
-		if (ret == -1)
-			unlink(socketFile);
-		ASSERTNOERR(ret == -1, "nativeCreate: listen");
-		ret = accept(s, (struct sockaddr *)&sa, &salen);
-		if (ret == -1)
-			unlink(socketFile);
-		ASSERTNOERR(ret == -1, "nativeCreate: accept");
+		ASSERTNOERR(listen(s, 0) == -1, "nativeCreate: listen");
+		s = accept(s, (struct sockaddr *)&sa, &salen);
+		ASSERTNOERR(s == -1, "nativeCreate: accept");
 	}
 
 	(*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
