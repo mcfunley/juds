@@ -39,11 +39,15 @@ with another client will result in an error.
 VERSION
 =======
 
-Version 0.8 - 2008-12-06
+Version 0.9 - 2009-02-07
 
 
 VERSION HISTORY
 ===============
+
+Version 0.9 - 2008-02-07
+    - Fixed a bug in the nativeCreate() function in UnixDomainSocket.c which
+      was the reason for UnixDomainSocketServer to not work correctly.
 
 Version 0.8 - 2008-12-06
     - Fixed UnixDomainSocket.UnixDomainSocketInputStream.read() method in order
@@ -86,8 +90,8 @@ A installation process could look like this:
 
 make install does nothing more than copying the shared library
 libunixdomainsocket.so to the /usr/lib directory. Alternatively you can also
-set the variable LD_LIBRARY_PATH so that includes the directory where
-libunixdomainsocket.so is included.
+set the variable LD_LIBRARY_PATH to include the directory where
+libunixdomainsocket.so is located.
 
 
 TESTING
