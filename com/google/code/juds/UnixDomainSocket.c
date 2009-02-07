@@ -29,7 +29,6 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 							jint jSocketType)
 {
 	int s;			/* socket file handle */
-	int ret;
 	struct sockaddr_un sa;
 	socklen_t salen;
 	const char *socketFile =
