@@ -37,9 +37,15 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 	/* create the socket */
 	s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
 	ASSERTNOERR(s == -1, "nativeCreate: socket");
+	bzero(&sa, sizeof(sa));
 	sa.sun_family = AF_UNIX;
 	strcpy(sa.sun_path, socketFile);
+	#if !defined(__FreeBSD__)
 	salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
+	#else
+	salen = SUN_LEN(&sa);
+	sa.sun_len = salen;
+	#endif
 	umask(0111);		/* read and write access for everybody */
 	/* bind to the socket; here the socket file is created */
 	ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
@@ -70,9 +76,15 @@ Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 
 	s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
 	ASSERTNOERR(s == -1, "nativeOpen: socket");
+	bzero(&sa, sizeof(sa));
 	sa.sun_family = AF_UNIX;
 	strcpy(sa.sun_path, socketFile);
+	#if !defined(__FreeBSD__)
 	salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
+	#else
+	salen = SUN_LEN(&sa);
+	sa.sun_len = salen;
+	#endif
 	ASSERTNOERR(connect(s, (struct sockaddr *)&sa, salen) == -1,
 		    "nativeOpen: connect");
 
