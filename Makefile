@@ -45,7 +45,7 @@ uninstall:
 test: $(PACKAGE_DIR)/test/TestUnixDomainSocket.class
 	python $(PACKAGE_DIR)/test/TestUnixDomainSocket.py $(TEST_SOCKET_FILE) &
 	@sleep 2
-	java $(PACKAGE).test.TestUnixDomainSocket $(TEST_SOCKET_FILE)
+	$(JAVA_HOME)/bin/java $(PACKAGE).test.TestUnixDomainSocket $(TEST_SOCKET_FILE)
 	rm -f $(TEST_SOCKET_FILE)
 
 $(PACKAGE_DIR)/test/TestUnixDomainSocket.class: $(PACKAGE_DIR)/test/TestUnixDomainSocket.java jar
