@@ -6,7 +6,7 @@ BUFSIZE = 128
 
 def main():
     if len(sys.argv) != 2:
-        print "usage: %s socketfilename" % sys.argv[0]
+        print ("usage: %s socketfilename" % sys.argv[0])
         sys.exit(1)
     socket_file = sys.argv[1]
 
@@ -19,18 +19,18 @@ def main():
     client, client_address = s.accept()
     text = "[1] Hello I'm the server!"
     client.send(text)
-    print "Text sent: \"%s\"" % text
+    print ("Text sent: \"%s\"" % text)
     text = client.recv(BUFSIZE)
-    print "Text received: \"%s\"" % text
+    print ("Text received: \"%s\"" % text)
     s.close()
     os.unlink(socket_file)
     
     # Testcase 1.2: Test UnixDomainSocketClient with a datagram socket
-    print "Testcase 1.2: Test UnixDomainSocketClient with a datagram socket..."
+    print ("Testcase 1.2: Test UnixDomainSocketClient with a datagram socket...")
     s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
     s.bind(socket_file)
     text = s.recv(BUFSIZE)
-    print "Text received: \"%s\"" % text
+    print ("Text received: \"%s\"" % text)
     s.close()
     os.unlink(socket_file)
     
@@ -41,9 +41,9 @@ def main():
     s.connect(socket_file)
     text = "[4] Hello I'm the client!"
     s.send(text)
-    print "Text sent: \"%s\"" % text
+    print ("Text sent: \"%s\"" % text)
     text = s.recv(BUFSIZE)
-    print "Text received: \"%s\"" % text
+    print ("Text received: \"%s\"" % text)
     s.close()
     
     time.sleep(1)   # wait for the server
@@ -53,7 +53,7 @@ def main():
     s.connect(socket_file)
     text = "[6] Hello I'm the client!"
     s.send(text)
-    print "Text sent: \"%s\"" % text
+    print ("Text sent: \"%s\"" % text)
     s.close()
 
 

@@ -1,5 +1,5 @@
 SHELL = /bin/sh
-VERSION = 0.8
+VERSION = 0.92
 PACKAGE = com.google.code.juds
 PACKAGE_DIR = com/google/code/juds
 TEST_SOCKET_FILE = JUDS_TEST_SOCKET_FILE

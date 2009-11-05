@@ -7,7 +7,6 @@
 
 #include <jni.h>
 #include <sys/socket.h>
-#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/un.h>
 #include <unistd.h>
@@ -46,7 +45,6 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 	salen = SUN_LEN(&sa);
 	sa.sun_len = salen;
 	#endif
-	umask(0111);		/* read and write access for everybody */
 	/* bind to the socket; here the socket file is created */
 	ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
 		    "nativeCreate: bind");
