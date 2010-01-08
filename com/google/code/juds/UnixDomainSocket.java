@@ -46,7 +46,11 @@ public abstract class UnixDomainSocket {
 	private int timeout;
 
 	// Native methods implemented in the Unix domain socket C library
-	protected native static int nativeCreate(String socketFile, int socketType);
+        protected native static int nativeCreate(String socketFile, int socketType);
+        
+        protected native static int nativeListen(String socketFile, int socketType, int backlog);
+
+        protected native static int nativeAccept(int nativeSocketFileHandle, int socketType);
 
 	protected native static int nativeOpen(String socketFile, int socketType);
 
@@ -64,6 +68,24 @@ public abstract class UnixDomainSocket {
 
 	protected native static int nativeUnlink(String socketFile);
 
+    protected UnixDomainSocket()
+    {
+	// default constructor
+    }
+
+    protected UnixDomainSocket(int pSocketFileHandle, int pSocketType)
+	throws IOException
+    {
+	nativeSocketFileHandle = pSocketFileHandle;	
+	socketType = pSocketType;
+	socketFile = null;
+
+		// Initialize the socket input and output streams
+		in = new UnixDomainSocketInputStream();
+		if (socketType == UnixDomainSocket.SOCK_STREAM)
+			out = new UnixDomainSocketOutputStream();
+
+    }
 	/**
 	 * Returns an input stream for this socket.
 	 * 
@@ -110,7 +132,10 @@ public abstract class UnixDomainSocket {
 	 * Unlink socket file
 	 */
 	public void unlink() {
-		nativeUnlink(socketFile);
+	    if (socketFile != null)
+		{
+		    nativeUnlink(socketFile);
+		}
 	}
 
 	protected class UnixDomainSocketInputStream extends InputStream {

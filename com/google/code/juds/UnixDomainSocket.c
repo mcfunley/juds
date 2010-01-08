@@ -61,6 +61,63 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeListen(JNIEnv * jEnv,
+							jclass jClass,
+							jstring jSocketFile,
+							jint jSocketType,
+							jint jBacklog)
+{
+	int s;			/* socket file handle */
+	struct sockaddr_un sa;
+	socklen_t salen;
+	const char *socketFile =
+	    (*jEnv)->GetStringUTFChars(jEnv, jSocketFile, NULL);
+
+	/* create the socket */
+	s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
+	ASSERTNOERR(s == -1, "nativeListen: socket");
+	bzero(&sa, sizeof(sa));
+	sa.sun_family = AF_UNIX;
+	strcpy(sa.sun_path, socketFile);
+	#if !defined(__FreeBSD__)
+	salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
+	#else
+	salen = SUN_LEN(&sa);
+	sa.sun_len = salen;
+	#endif
+	/* bind to the socket; here the socket file is created */
+	ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
+		    "nativeCreate: bind");
+	if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
+		ASSERTNOERR(listen(s, jBacklog) == -1, "nativeCreate: listen");
+	}
+
+	(*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
+
+	/* return the listening socket file handle */
+	return s;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_google_code_juds_UnixDomainSocket_nativeAccept(JNIEnv * jEnv,
+							jclass jClass,
+							jint jSocketFileHandle,
+							jint jSocketType)
+{
+	int s = -1;			/* socket file handle */
+
+	ASSERTNOERR(jSocketFileHandle == -1, "nativeAccept: socket");
+	if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
+		s = accept(jSocketFileHandle, NULL, 0);
+		ASSERTNOERR(s == -1, "nativeCreate: accept");
+	}
+
+	/* return the socket file handle */
+	return s;
+}
+
+
+JNIEXPORT jint JNICALL
 Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 						      jclass jClass,
 						      jstring jSocketFile,
@@ -109,6 +166,11 @@ Java_com_google_code_juds_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
 
 	(*jEnv)->ReleaseByteArrayElements(jEnv, jbarr, cbarr, 0);
 
+	// end of stream ( 0 in 'C' API should be -1 in java.io.InputStream API )
+	if ( count == 0 )
+	  {
+	    count = -1;
+	  }
 	/* return the number of bytes read */
 	return count;
 }

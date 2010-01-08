@@ -1,11 +1,11 @@
 SHELL = /bin/sh
-VERSION = 0.92
+VERSION = 0.93
 PACKAGE = com.google.code.juds
 PACKAGE_DIR = com/google/code/juds
 TEST_SOCKET_FILE = JUDS_TEST_SOCKET_FILE
 CC = gcc
 PLAT = linux
-JAVA_HOME = /usr/lib/jvm/java-6-sun
+JAVA_HOME = /usr/lib/jvm/java-6-openjdk/
 INCLUDEPATH = -I $(JAVA_HOME)/include -I $(JAVA_HOME)/include/$(PLAT)
 PREFIX = /usr
 CFLAGS = -O2 -Wall
@@ -42,13 +42,18 @@ install: libunixdomainsocket.so
 uninstall:
 	rm -f $(PREFIX)/lib/libunixdomainsocket.so
 
-test: $(PACKAGE_DIR)/test/TestUnixDomainSocket.class
+test: $(PACKAGE_DIR)/test/TestUnixDomainSocket.class $(PACKAGE_DIR)/test/TestUnixDomainSocketServer.class
 	python $(PACKAGE_DIR)/test/TestUnixDomainSocket.py $(TEST_SOCKET_FILE) &
 	@sleep 2
-	$(JAVA_HOME)/bin/java $(PACKAGE).test.TestUnixDomainSocket $(TEST_SOCKET_FILE)
+	java -Djava.library.path=. $(PACKAGE).test.TestUnixDomainSocket $(TEST_SOCKET_FILE)
 	rm -f $(TEST_SOCKET_FILE)
+	java -Djava.library.path=. $(PACKAGE).test.TestUnixDomainSocketServer $(TEST_SOCKET_FILE)
 
 $(PACKAGE_DIR)/test/TestUnixDomainSocket.class: $(PACKAGE_DIR)/test/TestUnixDomainSocket.java jar
+	$(JAVA_HOME)/bin/javac -cp juds-$(VERSION).jar $(JAVA_FLAGS) $<
+
+
+$(PACKAGE_DIR)/test/TestUnixDomainSocketServer.class: $(PACKAGE_DIR)/test/TestUnixDomainSocketServer.java jar
 	$(JAVA_HOME)/bin/javac -cp juds-$(VERSION).jar $(JAVA_FLAGS) $<
 
 clean:

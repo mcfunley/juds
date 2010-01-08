@@ -25,25 +25,36 @@ instantiating one of the two classes. Through the getInputStream and
 getOutputStream methods, the resulting instance can be used to get an
 InputStream and/or OutputStream object.
 
+from 0.93 version UnixDomainSocketServer can be used with accept() to obtain
+undifferentiated UnixDomainSocket, this allowing to handle multiple clients from
+a same Server. New API is then used in that case ( previous remains supported ).
+
 Limitations:
 
+) :
 Datagram sockets are unidirectional, i.e. trying to get an OutputStream for an
 UnixDomainSocketServer object results in an UnsupportedOperationException being
 thrown. Accordingly trying to get an InputStream for an UnixDomainSocketClient
 also results in such an exception being thrown.
-Stream sockets can only handle connections between two end points. Trying to
+With simplified API (up to .92 included) Stream sockets can only handle connections between two end points. Trying to
 connect to an UnixDomainSocketServer which has already accepted a connection
 with another client will result in an error.
-
+With New API UnixDomainServerSocket.accept() return an independant socket for each new incoming connection.
 
 VERSION
 =======
 
-Version 0.92 - 2009-11-05
+Version 0.93 - 2010-01-08
 
 
 VERSION HISTORY
 ===============
+
+Version 0.93 - 2010-01-08
+    - Extend API with accept() : allow server socket to handle multiple clients.
+    - Simplified API still supported but incompatible with accept()
+    - Test class for new API ( can be use as a sample )
+    - Fix for stream closure detection
 
 Version 0.92 - 2009-11-05
     - Removed the umask() call in UnixDomainSocket.c. As some nice people have
@@ -86,6 +97,7 @@ sockets for interprocess communication. JUDS can be installed by using the
 included makefile.
 IMPORTANT NOTE:  In order for the compilation process to work, it is likely
 that you need to change one or more of the top four variables in the makefile.
+By example please select you right jdk by edeting Makefile JAVA_HOME .
 
 A installation process could look like this:
 
@@ -140,6 +152,11 @@ AUTHOR
 ======
 
 Klaus Trainer
+
+CONTRIBUTOR
+===========
+
+Philippe Lhardy
 
 
 ACKNOWLEDGMENTS
