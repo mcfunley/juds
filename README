@@ -25,21 +25,22 @@ instantiating one of the two classes. Through the getInputStream and
 getOutputStream methods, the resulting instance can be used to get an
 InputStream and/or OutputStream object.
 
-from 0.93 version UnixDomainSocketServer can be used with accept() to obtain
-undifferentiated UnixDomainSocket, this allowing to handle multiple clients from
-a same Server. New API is then used in that case ( previous remains supported ).
+From version 0.93 on, UnixDomainSocketServer can be used with accept() to
+obtain undifferentiated UnixDomainSocket, this allowing to handle multiple
+clients from the same Server. New API is then used in that case (the previous
+one remains supported).
 
 Limitations:
 
-) :
 Datagram sockets are unidirectional, i.e. trying to get an OutputStream for an
 UnixDomainSocketServer object results in an UnsupportedOperationException being
 thrown. Accordingly trying to get an InputStream for an UnixDomainSocketClient
 also results in such an exception being thrown.
-With simplified API (up to .92 included) Stream sockets can only handle connections between two end points. Trying to
-connect to an UnixDomainSocketServer which has already accepted a connection
-with another client will result in an error.
-With New API UnixDomainServerSocket.accept() return an independant socket for each new incoming connection.
+With the API before version 0.92, stream sockets can only handle connections
+between two end points. Trying to connect to an UnixDomainSocketServer which
+has already accepted a connection with another client will result in an error.
+With New API (version 0.93 or higher) UnixDomainServerSocket.accept() returns
+an independent socket for each new incoming connection.
 
 VERSION
 =======
@@ -51,10 +52,10 @@ VERSION HISTORY
 ===============
 
 Version 0.93 - 2010-01-08
-    - Extend API with accept() : allow server socket to handle multiple clients.
-    - Simplified API still supported but incompatible with accept()
-    - Test class for new API ( can be use as a sample )
-    - Fix for stream closure detection
+    - Extend API with accept(): allow server socket to handle multiple clients.
+    - Simplified API still supported but incompatible with accept().
+    - Test class for new API (can be use as a sample).
+    - Fix for stream closure detection.
 
 Version 0.92 - 2009-11-05
     - Removed the umask() call in UnixDomainSocket.c. As some nice people have
