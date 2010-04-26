@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.File;
 
 /**
  * 
@@ -19,7 +20,7 @@ public abstract class UnixDomainSocket {
 
 	static {
 		// Load the Unix domain socket C library
-		System.loadLibrary("unixdomainsocket");
+        System.loadLibrary("unixdomainsocket");
 	}
 
 	/**

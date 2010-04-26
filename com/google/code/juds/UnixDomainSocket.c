@@ -13,9 +13,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <errno.h>
 
 #define ASSERTNOERR(cond, msg) do { \
-	if (cond) { perror(msg); return -1; }} while(0)
+    if (cond) { fprintf(stderr, "[%d] ", errno); perror(msg); return -1; }} while(0)
 
 /* In the class UnixDomainSocket SOCK_DGRAM and SOCK_STREAM correspond to the
  * constant values 0 and 1; SOCK_TYPE replaces them with the respective macro */

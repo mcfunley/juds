@@ -2,7 +2,7 @@ SHELL = /bin/sh
 VERSION = 0.93
 PACKAGE = com.google.code.juds
 PACKAGE_DIR = com/google/code/juds
-TEST_SOCKET_FILE = JUDS_TEST_SOCKET_FILE
+TEST_SOCKET_FILE = $(PWD)/JUDS_TEST_SOCKET_FILE
 CC = gcc
 
 
@@ -17,12 +17,12 @@ JAVA_FLAGS = -g:none -deprecation -target 1.6
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
     PLAT = darwin
-    CFLAGS=$(BASE_CFLAGS) -dynamiclib
-    NATIVELIB=libdomainunixsocket.dylib
+    CFLAGS=$(BASE_CFLAGS) -dynamiclib -arch x86_64
+    NATIVELIB=libunixdomainsocket.dylib
 else
     PLAT = linux
     CFLAGS=$(BASE_CFLAGS) -shared
-    NATIVELIB=libdomainunixsocket.so
+    NATIVELIB=libunixdomainsocket.so
 endif
 INCLUDEPATH = -I $(JAVA_HOME)/include -I $(JAVA_HOME)/include/$(PLAT)
 
