@@ -3,3 +3,9 @@ com/google/code/juds/UnixDomainSocket.h
 *jar
 *dylib
 *so
+autom4te.cache
+config.status
+Makefile
+config.log
+config.h
+aclocal.m4

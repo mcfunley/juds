@@ -8,6 +8,14 @@ AC_CONFIG_HEADER([config.h])
 
 # Checks for programs.
 AC_PROG_CC
+if test x$JAVA_HOME = x; then 
+   AX_CHECK_JAVA_HOME
+fi
+JAVAC=$JAVA_HOME/bin/javac
+
+if test "`$JAVAC -version 2>&1 | grep '1.6'`" = ""; then
+    AC_MSG_ERROR([The java compiler $JAVAC does not seem to be version 1.6 (try setting JAVA_HOME)?])
+fi
 
 # Checks for libraries.
 
@@ -22,7 +30,10 @@ AC_TYPE_SSIZE_T
 # Checks for library functions.
 AC_CHECK_FUNCS([bzero socket])
 
+AC_SUBST(JAVA_HOME)
+AC_SUBST(JAVAC)
 AC_SUBST(PACKAGE_VERSION)
+AC_SUBST(CFLAGS)
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
