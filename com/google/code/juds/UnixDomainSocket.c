@@ -135,13 +135,13 @@ Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 	bzero(&sa, sizeof(sa));
 	sa.sun_family = AF_UNIX;
 	strcpy(sa.sun_path, socketFile);
-	#if !defined(__FreeBSD__)
+	#if !defined(SUN_LEN)
 	salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
 	#else
 	salen = SUN_LEN(&sa);
-	sa.sun_len = salen;
 	#endif
-	ASSERTNOERR(connect(s, (struct sockaddr *)&sa, salen) == -1,
+	sa.sun_len = salen;
+	ASSERTNOERR(connect(s, (struct sockaddr *)&sa, sizeof(sa)) == -1,
 		    "nativeOpen: connect");
 
 	(*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);

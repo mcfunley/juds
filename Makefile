@@ -2,7 +2,7 @@ SHELL = /bin/sh
 VERSION = 0.93
 PACKAGE = com.google.code.juds
 PACKAGE_DIR = com/google/code/juds
-TEST_SOCKET_FILE = $(PWD)/JUDS_TEST_SOCKET_FILE
+TEST_SOCKET_FILE = JUDS_TEST_SOCKET_FILE
 CC = gcc
 
 
