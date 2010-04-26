@@ -8,7 +8,7 @@ import com.google.code.juds.*;
 
 public class TestUnixDomainSocket {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		if (args.length != 1) {
 			System.out
 					.println("usage: java TestUnixDomainSocket socketfilename");
@@ -28,6 +28,8 @@ public class TestUnixDomainSocket {
 		out.write(text.getBytes());
 		System.out.println("Text sent: " + "\"" + text + "\"");
 		socket.close();
+
+        Thread.sleep(2000);
 
 		// Testcase 1.2: Test UnixDomainSocketClient with a datagram socket
 		socket = new UnixDomainSocketClient(socketFile,
