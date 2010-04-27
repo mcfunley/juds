@@ -22,6 +22,25 @@
  * constant values 0 and 1; SOCK_TYPE replaces them with the respective macro */
 #define SOCK_TYPE(type) ((type) == 0 ? SOCK_DGRAM : SOCK_STREAM)
 
+
+
+socklen_t sockaddr_init(const char* socketFile, struct sockaddr_un* sa) {
+    socklen_t salen;
+
+    bzero(&sa, sizeof(struct sockaddr_un));
+    sa->sun_family = AF_UNIX;
+    strcpy(sa->sun_path, socketFile);
+
+#if !defined(SUN_LEN)
+    salen = strlen(sa->sun_path) + sizeof(sa->sun_family);
+#else
+    salen = SUN_LEN(sa);
+#endif
+
+    return salen;
+}
+
+
 JNIEXPORT jint JNICALL
 Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
                             jclass jClass,
@@ -30,22 +49,15 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 {
     int s;            /* socket file handle */
     struct sockaddr_un sa;
-    socklen_t salen;
     const char *socketFile =
         (*jEnv)->GetStringUTFChars(jEnv, jSocketFile, NULL);
+
+    socklen_t salen = sockaddr_init(socketFile, &sa);
 
     /* create the socket */
     s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
     ASSERTNOERR(s == -1, "nativeCreate: socket");
-    bzero(&sa, sizeof(sa));
-    sa.sun_family = AF_UNIX;
-    strcpy(sa.sun_path, socketFile);
-    #if !defined(__FreeBSD__)
-    salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
-    #else
-    salen = SUN_LEN(&sa);
-    sa.sun_len = salen;
-    #endif
+
     /* bind to the socket; here the socket file is created */
     ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
             "nativeCreate: bind");
@@ -70,22 +82,14 @@ Java_com_google_code_juds_UnixDomainSocket_nativeListen(JNIEnv * jEnv,
 {
     int s;            /* socket file handle */
     struct sockaddr_un sa;
-    socklen_t salen;
     const char *socketFile =
         (*jEnv)->GetStringUTFChars(jEnv, jSocketFile, NULL);
+    socklen_t salen = sockaddr_init(socketFile, &sa);
 
     /* create the socket */
     s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
     ASSERTNOERR(s == -1, "nativeListen: socket");
-    bzero(&sa, sizeof(sa));
-    sa.sun_family = AF_UNIX;
-    strcpy(sa.sun_path, socketFile);
-    #if !defined(__FreeBSD__)
-    salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
-    #else
-    salen = SUN_LEN(&sa);
-    sa.sun_len = salen;
-    #endif
+
     /* bind to the socket; here the socket file is created */
     ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
             "nativeCreate: bind");
@@ -126,21 +130,12 @@ Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 {
     int s;            /* socket file handle */
     struct sockaddr_un sa;
-    socklen_t salen;
     const char *socketFile =
         (*jEnv)->GetStringUTFChars(jEnv, jSocketFile, NULL);
+    socklen_t salen = sockaddr_init(socketFile, &sa);
 
     s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
     ASSERTNOERR(s == -1, "nativeOpen: socket");
-    bzero(&sa, sizeof(sa));
-    sa.sun_family = AF_UNIX;
-    strcpy(sa.sun_path, socketFile);
-    #if !defined(SUN_LEN)
-    salen = strlen(sa.sun_path) + sizeof(sa.sun_family);
-    #else
-    salen = SUN_LEN(&sa);
-    #endif
-    sa.sun_len = salen;
     ASSERTNOERR(connect(s, (struct sockaddr *)&sa, sizeof(sa)) == -1,
             "nativeOpen: connect");
 
