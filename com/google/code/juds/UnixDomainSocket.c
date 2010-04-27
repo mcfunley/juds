@@ -136,7 +136,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 
     s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
     ASSERTNOERR(s == -1, "nativeOpen: socket");
-    ASSERTNOERR(connect(s, (struct sockaddr *)&sa, sizeof(sa)) == -1,
+    ASSERTNOERR(connect(s, (struct sockaddr *)&sa, salen) == -1,
             "nativeOpen: connect");
 
     (*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
