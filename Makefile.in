@@ -15,6 +15,7 @@ JAVA_FLAGS = -g:none -deprecation -target 1.6
 NATIVELIB=libunixdomainsocket
 LIBEXT=@LIBEXT@
 INCLUDEPATH = -I $(JAVA_HOME)/include -I $(JAVA_HOME)/include/$(PLATFORM)
+ARCHSWITCH=@ARCHSWITCH@
 
 LIB32=$(NATIVELIB)-$(PLATFORM)-i386.$(LIBEXT)
 LIB64=$(NATIVELIB)-$(PLATFORM)-x86_64.$(LIBEXT)
@@ -34,8 +35,8 @@ juds-$(VERSION).jar: $(PACKAGE_DIR)/UnixDomainSocket.class $(PACKAGE_DIR)/UnixDo
 	$(JAR) cf $@ $(PACKAGE_DIR)/*.class $(LIB64) $(LIB32)
 
 nativelib: $(PACKAGE_DIR)/UnixDomainSocket.c $(PACKAGE_DIR)/UnixDomainSocket.h
-	$(CC) $(CFLAGS) -fPIC $(INCLUDEPATH) -arch i386 -o $(LIB32) $< 
-	$(CC) $(CFLAGS) -fPIC $(INCLUDEPATH) -arch x86_64 -o $(LIB64) $< 
+	$(CC) $(CFLAGS) -fPIC $(INCLUDEPATH) $(ARCHSWITCH) i386 -o $(LIB32) $< 
+	$(CC) $(CFLAGS) -fPIC $(INCLUDEPATH) $(ARCHSWITCH) x86_64 -o $(LIB64) $< 
 
 $(PACKAGE_DIR)/UnixDomainSocket.h: $(PACKAGE).UnixDomainSocket
 	$(JAVAH) -o $@ $<

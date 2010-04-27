@@ -25,14 +25,17 @@ AC_SUBST(JAVAC)
 if test `uname` = "Darwin"; then
     PLATFORM=darwin
     LIBSWITCH=-dynamiclib
+    ARCHSWITCH=-arch
     LIBEXT=dylib
 else
     PLATFORM=linux
     LIBSWITCH=-shared
+    ARCHSWITCH=-A
     LIBEXT=so
 fi
 AC_SUBST(PLATFORM)
 AC_SUBST(LIBSWITCH)
+AC_SUBST(ARCHSWITCH)
 AC_SUBST(LIBEXT)
 
 

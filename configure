@@ -664,6 +664,7 @@ JAVA_HOME
 JAVAC
 PLATFORM
 LIBSWITCH
+ARCHSWITCH
 LIBEXT
 CPP
 GREP
@@ -2678,12 +2679,15 @@ fi
 if test `uname` = "Darwin"; then
     PLATFORM=darwin
     LIBSWITCH=-dynamiclib
+    ARCHSWITCH=-arch
     LIBEXT=dylib
 else
     PLATFORM=linux
     LIBSWITCH=-shared
+    ARCHSWITCH=-A
     LIBEXT=so
 fi
+
 
 
 
@@ -4415,6 +4419,7 @@ JAVA_HOME!$JAVA_HOME$ac_delim
 JAVAC!$JAVAC$ac_delim
 PLATFORM!$PLATFORM$ac_delim
 LIBSWITCH!$LIBSWITCH$ac_delim
+ARCHSWITCH!$ARCHSWITCH$ac_delim
 LIBEXT!$LIBEXT$ac_delim
 CPP!$CPP$ac_delim
 GREP!$GREP$ac_delim
@@ -4423,7 +4428,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 55; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 56; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
