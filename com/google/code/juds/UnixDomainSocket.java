@@ -34,8 +34,7 @@ public abstract class UnixDomainSocket {
             try {
                 extractNativeLib(lib);
                 if(!lib.exists()) {
-                    throw new UnsatisfiedLinkError(
-                        "The native library was not extracted");
+                    throwLink("The native library was not extracted");
                 }
             } catch(IOException e) {
                 throwLink(e);
@@ -54,30 +53,34 @@ public abstract class UnixDomainSocket {
     }
     
     private static void throwLink(Throwable e) {
-        throw new UnsatisfiedLinkError(e.toString());
+        throwLink(e.toString());
+    }
+    private static void throwLink(String s) {
+        throw new UnsatisfiedLinkError(s);
     }
 
     private static File getNativeLibTarget() {
         String p = platform();
         String ext = "darwin".equals(p) ? "dylib" : "so";
-        return new File("/var/tmp/libunixdomainsocket-%s-%s.%s".format(
-                            p, arch(), ext));
+        String path = String.format(
+            "/var/tmp/libunixdomainsocket-%s-%s.%s", p, arch(), ext);
+        return new File(path);
     }
 
     private static void extractNativeLib(File target) 
         throws IOException, URISyntaxException {
 
-        System.out.println("HERE HERE");
         File f = new File(UnixDomainSocket.class
                           .getProtectionDomain()
                           .getCodeSource()
                           .getLocation()
                           .toURI());
-        Class c = UnixDomainSocket.class;
-        System.err.println(c.getResource(c.getSimpleName()+".class"));
-        System.err.println(f.getCanonicalPath());
         JarFile jarfile = new JarFile(f);
         ZipEntry z = jarfile.getEntry(target.getName());
+        if(z == null) {
+            throwLink("Could not find library: "+target.getName());
+        }
+
         InputStream in = jarfile.getInputStream(z);
         try {
             OutputStream out = new BufferedOutputStream(
