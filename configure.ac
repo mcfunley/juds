@@ -30,7 +30,7 @@ if test `uname` = "Darwin"; then
 else
     PLATFORM=linux
     LIBSWITCH=-shared
-    ARCHSWITCH=-A
+    ARCHSWITCH=-march
     LIBEXT=so
 fi
 AC_SUBST(PLATFORM)
