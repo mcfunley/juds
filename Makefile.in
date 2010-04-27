@@ -19,6 +19,7 @@ INCLUDEPATH = -I $(JAVA_HOME)/include -I $(JAVA_HOME)/include/$(PLATFORM)
 LIB32=$(NATIVELIB)-$(PLATFORM)-i386.$(LIBEXT)
 LIB64=$(NATIVELIB)-$(PLATFORM)-x86_64.$(LIBEXT)
 JARFILE=juds-$(VERSION).jar
+UNIJARFILE=juds-$(VERSION)-universal.jar
 
 all: jar 
 
@@ -26,7 +27,8 @@ jar: $(JARFILE)
 
 # requires that the binaries from other platforms are copied here. 
 universal: jar
-	$(JAR) uf $(JARFILE) $(NATIVELIB)-darwin-i386.dylib $(NATIVELIB)-darwin-x86_64.dylib $(NATIVELIB)-linux-x86_64.so $(NATIVELIB)-linux-i386.so
+	cp $(JARFILE) $(UNIJARFILE)
+	$(JAR) uf $(UNIJARFILE) $(NATIVELIB)-darwin-i386.dylib $(NATIVELIB)-darwin-x86_64.dylib $(NATIVELIB)-linux-x86_64.so $(NATIVELIB)-linux-i386.so
 
 juds-$(VERSION).jar: $(PACKAGE_DIR)/UnixDomainSocket.class $(PACKAGE_DIR)/UnixDomainSocketClient.class $(PACKAGE_DIR)/UnixDomainSocketServer.class nativelib
 	$(JAR) cf $@ $(PACKAGE_DIR)/*.class $(LIB64) $(LIB32)

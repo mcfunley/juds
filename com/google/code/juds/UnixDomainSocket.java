@@ -8,6 +8,11 @@ import java.io.InterruptedIOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.File;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.net.URISyntaxException;
 
 /**
  * 
@@ -20,8 +25,91 @@ public abstract class UnixDomainSocket {
 
     static {
         // Load the Unix domain socket C library
-        System.loadLibrary("unixdomainsocket");
+        loadNativeLib();
     }
+
+    private static void loadNativeLib() {
+        File lib = getNativeLibTarget();
+        if(!lib.exists()) {
+            try {
+                extractNativeLib(lib);
+                if(!lib.exists()) {
+                    throw new UnsatisfiedLinkError(
+                        "The native library was not extracted");
+                }
+            } catch(IOException e) {
+                throwLink(e);
+            } catch(URISyntaxException e) {
+                throwLink(e);
+            }
+        }
+
+        String path = "";
+        try {
+            path = lib.getCanonicalPath();
+        } catch(IOException e) {
+            throwLink(e);
+        }
+        System.load(path); 
+    }
+    
+    private static void throwLink(Throwable e) {
+        throw new UnsatisfiedLinkError(e.toString());
+    }
+
+    private static File getNativeLibTarget() {
+        String p = platform();
+        String ext = "darwin".equals(p) ? "dylib" : "so";
+        return new File("/var/tmp/libunixdomainsocket-%s-%s.%s".format(
+                            p, arch(), ext));
+    }
+
+    private static void extractNativeLib(File target) 
+        throws IOException, URISyntaxException {
+
+        JarFile jarfile = new JarFile(new File(UnixDomainSocket.class
+                                               .getProtectionDomain()
+                                               .getCodeSource()
+                                               .getLocation()
+                                               .toURI()));
+        ZipEntry z = jarfile.getEntry(target.getName());
+        InputStream in = jarfile.getInputStream(z);
+        try {
+            OutputStream out = new BufferedOutputStream(
+                new FileOutputStream(target));
+            try {
+                byte[] buf = new byte[2048];
+                for(;;) {
+                    int n = in.read(buf);
+                    if(n < 0) {
+                        break;
+                    }
+                    out.write(buf, 0, n);
+                }
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
+        }
+    }
+
+    private static String arch() {
+        String a = System.getProperty("os.arch");
+        if("amd64".equals(a) || "x86_64".equals(a)) {
+            return "x86_64";
+        }
+        return a;
+    }
+
+    private static String platform() {
+        String p = System.getProperty("os.name").toLowerCase();
+        if("mac os x".equals(p)) {
+            return "darwin";
+        }
+        return p;
+    }
+
 
     /**
      * A constant for the datagram socket type (connectionless).
