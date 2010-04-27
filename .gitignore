@@ -9,3 +9,4 @@ Makefile
 config.log
 config.h
 aclocal.m4
+*dSYM

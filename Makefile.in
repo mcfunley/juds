@@ -8,33 +8,32 @@ JAVA_HOME = @JAVA_HOME@
 JAVAC = @JAVAC@
 JAR = $(JAVA_HOME)/bin/jar
 JAVAH = $(JAVA_HOME)/bin/javah
-
+PLATFORM=@PLATFORM@
 PREFIX = /usr
-BASE_CFLAGS = @CFLAGS@
+CFLAGS = @CFLAGS@ @LIBSWITCH@
 JAVA_FLAGS = -g:none -deprecation -target 1.6
+NATIVELIB=libunixdomainsocket
+LIBEXT=@LIBEXT@
+INCLUDEPATH = -I $(JAVA_HOME)/include -I $(JAVA_HOME)/include/$(PLATFORM)
 
-UNAME := $(shell uname)
-ifeq ($(UNAME), Darwin)
-    PLAT = darwin
-    CFLAGS=$(BASE_CFLAGS) -dynamiclib -arch x86_64
-    NATIVELIB=libunixdomainsocket.dylib
-else
-    PLAT = linux
-    CFLAGS=$(BASE_CFLAGS) -shared
-    NATIVELIB=libunixdomainsocket.so
-endif
-INCLUDEPATH = -I $(JAVA_HOME)/include -I $(JAVA_HOME)/include/$(PLAT)
+LIB32=$(NATIVELIB)-$(PLATFORM)-i386.$(LIBEXT)
+LIB64=$(NATIVELIB)-$(PLATFORM)-x86_64.$(LIBEXT)
+JARFILE=juds-$(VERSION).jar
 
+all: jar 
 
-all: jar nativelib
+jar: $(JARFILE)
 
-jar: juds-$(VERSION).jar
+# requires that the binaries from other platforms are copied here. 
+universal: jar
+	$(JAR) uf $(JARFILE) $(NATIVELIB)-darwin-i386.dylib $(NATIVELIB)-darwin-x86_64.dylib $(NATIVELIB)-linux-x86_64.so $(NATIVELIB)-linux-i386.so
 
-juds-$(VERSION).jar: $(PACKAGE_DIR)/UnixDomainSocket.class $(PACKAGE_DIR)/UnixDomainSocketClient.class $(PACKAGE_DIR)/UnixDomainSocketServer.class
-	$(JAR) cf $@ $(PACKAGE_DIR)/*.class
+juds-$(VERSION).jar: $(PACKAGE_DIR)/UnixDomainSocket.class $(PACKAGE_DIR)/UnixDomainSocketClient.class $(PACKAGE_DIR)/UnixDomainSocketServer.class nativelib
+	$(JAR) cf $@ $(PACKAGE_DIR)/*.class $(LIB64) $(LIB32)
 
 nativelib: $(PACKAGE_DIR)/UnixDomainSocket.c $(PACKAGE_DIR)/UnixDomainSocket.h
-	$(CC) $(CFLAGS) -fPIC $(INCLUDEPATH) -o $(NATIVELIB) $< 
+	$(CC) $(CFLAGS) -fPIC $(INCLUDEPATH) -arch i386 -o $(LIB32) $< 
+	$(CC) $(CFLAGS) -fPIC $(INCLUDEPATH) -arch x86_64 -o $(LIB64) $< 
 
 $(PACKAGE_DIR)/UnixDomainSocket.h: $(PACKAGE).UnixDomainSocket
 	$(JAVAH) -o $@ $<
@@ -64,11 +63,11 @@ test: $(PACKAGE_DIR)/test/TestUnixDomainSocket.class $(PACKAGE_DIR)/test/TestUni
 	java -Djava.library.path=. $(PACKAGE).test.TestUnixDomainSocketServer $(TEST_SOCKET_FILE)
 
 $(PACKAGE_DIR)/test/TestUnixDomainSocket.class: $(PACKAGE_DIR)/test/TestUnixDomainSocket.java jar
-	$(JAVAC) -cp juds-$(VERSION).jar $(JAVA_FLAGS) $<
+	$(JAVAC) -cp $(JARFILE) $(JAVA_FLAGS) $<
 
 
 $(PACKAGE_DIR)/test/TestUnixDomainSocketServer.class: $(PACKAGE_DIR)/test/TestUnixDomainSocketServer.java jar
-	$(JAVAC) -cp juds-$(VERSION).jar $(JAVA_FLAGS) $<
+	$(JAVAC) -cp $(JARFILE) $(JAVA_FLAGS) $<
 
 clean:
 	rm -f $(PACKAGE_DIR)/*.class $(PACKAGE_DIR)/test/*.class $(PACKAGE_DIR)/*.h *.so *.jar $(TEST_SOCKET_FILE)
