@@ -67,11 +67,16 @@ public abstract class UnixDomainSocket {
     private static void extractNativeLib(File target) 
         throws IOException, URISyntaxException {
 
-        JarFile jarfile = new JarFile(new File(UnixDomainSocket.class
-                                               .getProtectionDomain()
-                                               .getCodeSource()
-                                               .getLocation()
-                                               .toURI()));
+        System.out.println("HERE HERE");
+        File f = new File(UnixDomainSocket.class
+                          .getProtectionDomain()
+                          .getCodeSource()
+                          .getLocation()
+                          .toURI());
+        Class c = UnixDomainSocket.class;
+        System.err.println(c.getResource(c.getSimpleName()+".class"));
+        System.err.println(f.getCanonicalPath());
+        JarFile jarfile = new JarFile(f);
         ZipEntry z = jarfile.getEntry(target.getName());
         InputStream in = jarfile.getInputStream(z);
         try {

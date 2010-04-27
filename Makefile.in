@@ -57,19 +57,20 @@ install: nativelib
 uninstall:
 	rm -f $(PREFIX)/lib/$(NATIVELIB)
 
-test: $(PACKAGE_DIR)/test/TestUnixDomainSocket.class $(PACKAGE_DIR)/test/TestUnixDomainSocketServer.class
-	python $(PACKAGE_DIR)/test/TestUnixDomainSocket.py $(TEST_SOCKET_FILE) &
+test: test/TestUnixDomainSocket.class test/TestUnixDomainSocketServer.class
+	python test/TestUnixDomainSocket.py $(TEST_SOCKET_FILE) &
 	@sleep 2
-	java -Djava.library.path=. $(PACKAGE).test.TestUnixDomainSocket $(TEST_SOCKET_FILE)
+	java -cp $(JARFILE):test TestUnixDomainSocket $(TEST_SOCKET_FILE)
 	rm -f $(TEST_SOCKET_FILE)
-	java -Djava.library.path=. $(PACKAGE).test.TestUnixDomainSocketServer $(TEST_SOCKET_FILE)
+	java -cp $(JARFILE):test TestUnixDomainSocketServer $(TEST_SOCKET_FILE)
+	rm -f $(TEST_SOCKET_FILE)
 
-$(PACKAGE_DIR)/test/TestUnixDomainSocket.class: $(PACKAGE_DIR)/test/TestUnixDomainSocket.java jar
+test/TestUnixDomainSocket.class: test/TestUnixDomainSocket.java jar
 	$(JAVAC) -cp $(JARFILE) $(JAVA_FLAGS) $<
 
 
-$(PACKAGE_DIR)/test/TestUnixDomainSocketServer.class: $(PACKAGE_DIR)/test/TestUnixDomainSocketServer.java jar
+test/TestUnixDomainSocketServer.class: test/TestUnixDomainSocketServer.java jar
 	$(JAVAC) -cp $(JARFILE) $(JAVA_FLAGS) $<
 
 clean:
-	rm -f $(PACKAGE_DIR)/*.class $(PACKAGE_DIR)/test/*.class $(PACKAGE_DIR)/*.h *.so *.jar $(TEST_SOCKET_FILE)
+	rm -f $(PACKAGE_DIR)/*.class $(PACKAGE_DIR)/test/*.class $(PACKAGE_DIR)/*.h *.so *.jar $(TEST_SOCKET_FILE) test/*class
