@@ -32,6 +32,14 @@ universal: jar
 	cp $(JARFILE) $(UNIJARFILE)
 	$(JAR) uf $(UNIJARFILE) $(NATIVELIB)-darwin-i386.dylib $(NATIVELIB)-darwin-x86_64.dylib $(NATIVELIB)-linux-x86_64.so $(NATIVELIB)-linux-i386.so
 
+package: universal
+	mkdir juds-$(VERSION)-universal
+	cp $(UNIJARFILE) juds-$(VERSION)-universal
+	cp README.md juds-$(VERSION)-universal
+	cp COPYRIGHT juds-$(VERSION)-universal
+	tar pczf juds-$(VERSION)-universal.tar.gz juds-$(VERSION)-universal
+	rm -rf juds-$(VERSION)-universal
+
 juds-$(VERSION).jar: $(PACKAGE_DIR)/UnixDomainSocket.class $(PACKAGE_DIR)/UnixDomainSocketClient.class $(PACKAGE_DIR)/UnixDomainSocketServer.class nativelib
 	$(JAR) cf $@ $(PACKAGE_DIR)/*.class $(LIB64) $(LIB32)
 
