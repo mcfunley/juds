@@ -26,12 +26,20 @@ public abstract class UnixDomainSocket {
     private static File jarFile;
     static {
         // Load the Unix domain socket C library
-        jarFile = new File(UnixDomainSocket.class
-                           .getProtectionDomain()
-                           .getCodeSource()
-                           .getLocation()
-                           .toURI());
+        getJarPath();
         loadNativeLib();
+    }
+
+    private static void getJarPath() {
+        try {
+            jarFile = new File(UnixDomainSocket.class
+                               .getProtectionDomain()
+                               .getCodeSource()
+                               .getLocation()
+                               .toURI());
+        } catch(URISyntaxException e) {
+            throwLink(e);
+        }
     }
 
     private static void loadNativeLib() {
@@ -58,7 +66,7 @@ public abstract class UnixDomainSocket {
         System.load(path); 
     }
 
-    private static bool jarNewer(File lib) {
+    private static Boolean jarNewer(File lib) {
         return lib.lastModified() < jarFile.lastModified();
     }
     
@@ -80,7 +88,7 @@ public abstract class UnixDomainSocket {
     private static void extractNativeLib(File target) 
         throws IOException, URISyntaxException {
 
-        JarFile jar = new JarFile(f);
+        JarFile jar = new JarFile(jarFile);
         ZipEntry z = jar.getEntry(target.getName());
         if(z == null) {
             throwLink("Could not find library: "+target.getName());
