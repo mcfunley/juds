@@ -23,20 +23,21 @@
 #define SOCK_TYPE(type) ((type) == 0 ? SOCK_DGRAM : SOCK_STREAM)
 
 
+#ifndef SUN_LEN
+#define SUN_LEN(su) \
+        (sizeof(*(su)) - sizeof((su)->sun_path) + strlen((su)->sun_path))
+#endif
+
+
 
 socklen_t sockaddr_init(const char* socketFile, struct sockaddr_un* sa) {
     socklen_t salen;
 
-    bzero(&sa, sizeof(struct sockaddr_un));
+    bzero(sa, sizeof(struct sockaddr_un));
     sa->sun_family = AF_UNIX;
     strcpy(sa->sun_path, socketFile);
 
-#if !defined(SUN_LEN)
-    salen = strlen(sa->sun_path) + sizeof(sa->sun_family);
-#else
     salen = SUN_LEN(sa);
-#endif
-
     return salen;
 }
 
@@ -92,9 +93,9 @@ Java_com_google_code_juds_UnixDomainSocket_nativeListen(JNIEnv * jEnv,
 
     /* bind to the socket; here the socket file is created */
     ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
-            "nativeCreate: bind");
+            "nativeListen: bind");
     if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
-        ASSERTNOERR(listen(s, jBacklog) == -1, "nativeCreate: listen");
+        ASSERTNOERR(listen(s, jBacklog) == -1, "nativeListen: listen");
     }
 
     (*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
@@ -114,7 +115,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeAccept(JNIEnv * jEnv,
     ASSERTNOERR(jSocketFileHandle == -1, "nativeAccept: socket");
     if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
         s = accept(jSocketFileHandle, NULL, 0);
-        ASSERTNOERR(s == -1, "nativeCreate: accept");
+        ASSERTNOERR(s == -1, "nativeAccept: accept");
     }
 
     /* return the socket file handle */

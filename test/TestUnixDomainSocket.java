@@ -46,6 +46,7 @@ public class TestUnixDomainSocket {
 		System.out.println("Text sent: \"" + text + "\"");
 		socket.close();
 
+
 		// Testcase 2.1: Test UnixDomainSocketServer with a stream socket
 		System.out.println("\nTest #2: Test UnixDomainSocketServer\nTestcase "
 				+ "2.1: Test UnixDomainSocketServer with a stream socket...");

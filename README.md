@@ -1,10 +1,9 @@
-====
 JUDS
 ====
 
 
 ABSTRACT
-========
+--------
 
 Java Unix Domain Sockets (JUDS) provide classes to address the need in Java
 for accessing Unix domain sockets. The source is provided for a shared library
@@ -14,7 +13,7 @@ UnixDomainSocket classes via JNI (Java Native Interface) to open, close, unlink
 
 
 DESCRIPTION
-===========
+-----------
 
 JUDS is similar with and inspired by J-BUDS. However, JUDS has been written to
 have more performance than J-BUDS while supplying all features Unix domain
@@ -30,7 +29,7 @@ obtain undifferentiated UnixDomainSocket, this allowing to handle multiple
 clients from the same Server. New API is then used in that case (the previous
 one remains supported).
 
-Limitations:
+*Limitations*:
 
 Datagram sockets are unidirectional, i.e. trying to get an OutputStream for an
 UnixDomainSocketServer object results in an UnsupportedOperationException being
@@ -45,11 +44,21 @@ an independent socket for each new incoming connection.
 VERSION
 =======
 
-Version 0.93 - 2010-01-08
+Version 0.94 - 2010-04-30
 
 
 VERSION HISTORY
 ===============
+
+Version 0.94 - 2010-04-30
+    - Now builds on OSX.
+    - Build system switched to autoconf.
+    - Native libraries are now embedded in the jar. 
+    - Support for universal jars.
+    - Mainline repository moved to: http://github.com/mcfunley/juds.
+    - Refactored native library.
+    - Fixed errant bzero of random memory location.
+    - Minor bug fixes.
 
 Version 0.93 - 2010-01-08
     - Extend API with accept(): allow server socket to handle multiple clients.
@@ -149,15 +158,11 @@ please write to the Free Software Foundation, Inc., 59 Temple Place,
 Suite 330, Boston, MA  02111-1307 USA
 
 
-AUTHOR
-======
-
-Klaus Trainer
-
-CONTRIBUTOR
-===========
-
+CONTRIBUTORS
+============
+Klaus Trainer - original author.
 Philippe Lhardy
+Dan McKinley - current maintainer. 
 
 
 ACKNOWLEDGMENTS

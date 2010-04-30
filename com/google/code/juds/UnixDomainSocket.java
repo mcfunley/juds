@@ -23,14 +23,20 @@ import java.net.URISyntaxException;
  */
 public abstract class UnixDomainSocket {
 
+    private static File jarFile;
     static {
         // Load the Unix domain socket C library
+        jarFile = new File(UnixDomainSocket.class
+                           .getProtectionDomain()
+                           .getCodeSource()
+                           .getLocation()
+                           .toURI());
         loadNativeLib();
     }
 
     private static void loadNativeLib() {
         File lib = getNativeLibTarget();
-        if(!lib.exists()) {
+        if(!lib.exists() || jarNewer(lib)) {
             try {
                 extractNativeLib(lib);
                 if(!lib.exists()) {
@@ -51,6 +57,10 @@ public abstract class UnixDomainSocket {
         }
         System.load(path); 
     }
+
+    private static bool jarNewer(File lib) {
+        return lib.lastModified() < jarFile.lastModified();
+    }
     
     private static void throwLink(Throwable e) {
         throwLink(e.toString());
@@ -70,18 +80,13 @@ public abstract class UnixDomainSocket {
     private static void extractNativeLib(File target) 
         throws IOException, URISyntaxException {
 
-        File f = new File(UnixDomainSocket.class
-                          .getProtectionDomain()
-                          .getCodeSource()
-                          .getLocation()
-                          .toURI());
-        JarFile jarfile = new JarFile(f);
-        ZipEntry z = jarfile.getEntry(target.getName());
+        JarFile jar = new JarFile(f);
+        ZipEntry z = jar.getEntry(target.getName());
         if(z == null) {
             throwLink("Could not find library: "+target.getName());
         }
 
-        InputStream in = jarfile.getInputStream(z);
+        InputStream in = jar.getInputStream(z);
         try {
             OutputStream out = new BufferedOutputStream(
                 new FileOutputStream(target));
