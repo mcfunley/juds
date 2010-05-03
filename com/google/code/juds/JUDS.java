@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
 import java.net.URL;
 
+
 public class JUDS {
 
     /**
@@ -37,7 +38,8 @@ public class JUDS {
                InvocationTargetException {
 
         String name = (type == SERVER) ? "Server" : "Client";
-        Class c = judsCl.loadClass("com.google.code.juds.UnixDomainSocket"+name);
+        Class c = Class.forName("com.google.code.juds.UnixDomainSocket"+name, 
+                                true, judsCl);
         
         Constructor ctor = c.getConstructor(new Class[] { 
                 String.class, int.class });
