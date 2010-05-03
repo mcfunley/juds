@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.61)
 AC_INIT(JUDS, 0.94, klaus.trainer@web.de)
-AC_CONFIG_SRCDIR([com/google/code/juds/UnixDomainSocket.c])
+AC_CONFIG_SRCDIR([com/etsy/net/UnixDomainSocket.c])
 AC_CONFIG_HEADER([config.h])
 
 # PROGRAMS

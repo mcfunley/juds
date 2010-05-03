@@ -2,9 +2,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.google.code.juds.UnixDomainSocket;
-import com.google.code.juds.UnixDomainSocketClient;
-import com.google.code.juds.UnixDomainSocketServer;
+import com.etsy.net.*;
+
 
 /**
  * Standalone java Test code for new API with listen/accept

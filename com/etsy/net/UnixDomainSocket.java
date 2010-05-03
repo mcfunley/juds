@@ -1,4 +1,4 @@
-package com.google.code.juds;
+package com.etsy.net;
 
 // UnixDomainSocket.java
 // Inspired by J-BUDS version 1.0

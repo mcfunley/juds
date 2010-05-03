@@ -1,5 +1,5 @@
 *class
-com/google/code/juds/UnixDomainSocket.h
+com/etsy/net/UnixDomainSocket.h
 *jar
 *dylib
 *so

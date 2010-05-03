@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 VERSION = @PACKAGE_VERSION@
-PACKAGE = com.google.code.juds
-PACKAGE_DIR = com/google/code/juds
+PACKAGE = com.etsy.net
+PACKAGE_DIR = com/etsy/net
 TEST_SOCKET_FILE = JUDS_TEST_SOCKET_FILE
 CC = gcc
 JAVA_HOME = @JAVA_HOME@

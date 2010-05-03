@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.google.code.juds.*;
+import com.etsy.net.*;
 
 public class TestUnixDomainSocket {
 

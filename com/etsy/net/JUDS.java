@@ -1,4 +1,4 @@
-package com.google.code.juds;
+package com.etsy.net;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
