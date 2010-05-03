@@ -169,7 +169,7 @@ public class TestUnixDomainSocketServer
 					.println("usage: java TestUnixDomainSocketServer socketfilename");
 			System.exit(1);
 		}
-		TestUnixDomainSocketServer thisTest = new TestUnixDomainSocketServer(args[0], UnixDomainSocket.SOCK_STREAM);
+		TestUnixDomainSocketServer thisTest = new TestUnixDomainSocketServer(args[0], JUDS.SOCK_STREAM);
 		
 		try {
 			thisTest.fullTest();

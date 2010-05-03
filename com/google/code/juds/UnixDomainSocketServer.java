@@ -28,7 +28,7 @@ public class UnixDomainSocketServer extends UnixDomainSocket {
 
         // Initialize the socket input and output streams
         in = new UnixDomainSocketInputStream();
-        if (socketType == UnixDomainSocket.SOCK_STREAM)
+        if (socketType == JUDS.SOCK_STREAM)
             out = new UnixDomainSocketOutputStream();
     }
 

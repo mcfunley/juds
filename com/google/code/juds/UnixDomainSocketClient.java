@@ -24,7 +24,7 @@ public class UnixDomainSocketClient extends UnixDomainSocket {
             throw new IOException("Unable to open Unix domain socket");
 
         // Initialize the socket input and output streams
-        if (socketType == UnixDomainSocket.SOCK_STREAM)
+        if (socketType == JUDS.SOCK_STREAM)
             in = new UnixDomainSocketInputStream();
         out = new UnixDomainSocketOutputStream();
     }
@@ -35,12 +35,12 @@ public class UnixDomainSocketClient extends UnixDomainSocket {
      * @exception UnsupportedOperationException
      *                if <code>getInputStream</code> is invoked for an
      *                <code>UnixDomainSocketClient</code> of type
-     *                <code>UnixDomainSocket.SOCK_DGRAM</code>.
+     *                <code>JUDS.SOCK_DGRAM</code>.
      * @return An input stream for writing bytes to this socket
      */
     @Override
     public InputStream getInputStream() {
-        if (socketType == UnixDomainSocket.SOCK_STREAM)
+        if (socketType == JUDS.SOCK_STREAM)
             return (InputStream) in;
         else
             throw new UnsupportedOperationException();

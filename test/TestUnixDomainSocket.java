@@ -17,7 +17,7 @@ public class TestUnixDomainSocket {
 		byte[] b = new byte[128];
 		// Testcase 1.1: Test UnixDomainSocketClient with a stream socket
 		UnixDomainSocketClient socket = new UnixDomainSocketClient(socketFile,
-				UnixDomainSocket.SOCK_STREAM);
+				JUDS.SOCK_STREAM);
 		InputStream in = socket.getInputStream();
 		OutputStream out = socket.getOutputStream();
 		in.read(b);
@@ -31,7 +31,7 @@ public class TestUnixDomainSocket {
 
 		// Testcase 1.2: Test UnixDomainSocketClient with a datagram socket
 		socket = new UnixDomainSocketClient(socketFile,
-				UnixDomainSocket.SOCK_DGRAM);
+				JUDS.SOCK_DGRAM);
 		System.out.println("Provoke and catch an "
 				+ "UnsupportedOperationException:");
 		try {
@@ -51,7 +51,7 @@ public class TestUnixDomainSocket {
 		System.out.println("\nTest #2: Test UnixDomainSocketServer\nTestcase "
 				+ "2.1: Test UnixDomainSocketServer with a stream socket...");
 		UnixDomainSocketServer ssocket = new UnixDomainSocketServer(socketFile,
-				UnixDomainSocket.SOCK_STREAM);
+				JUDS.SOCK_STREAM);
 		in = ssocket.getInputStream();
 		out = ssocket.getOutputStream();
 		in.read(b);
@@ -66,7 +66,7 @@ public class TestUnixDomainSocket {
 		System.out.println("Testcase 2.2: Test UnixDomainSocketServer with "
 				+ "a datagram socket...");
 		ssocket = new UnixDomainSocketServer(socketFile,
-				UnixDomainSocket.SOCK_DGRAM);
+				JUDS.SOCK_DGRAM);
 		System.out.println("Provoke and catch an "
 				+ "UnsupportedOperationException:");
 		in = ssocket.getInputStream();

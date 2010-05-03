@@ -26,17 +26,20 @@ public abstract class UnixDomainSocket {
     private static File jarFile;
     static {
         // Load the Unix domain socket C library
-        getJarPath();
-        loadNativeLib();
+        if(!isLoaded()) {
+            getJarPath();
+            loadNativeLib();
+            System.setProperty("juds.loaded", "true");
+        }
+    }
+
+    private static Boolean isLoaded() {
+        return "true".equals(System.getProperty("juds.loaded"));
     }
 
     private static void getJarPath() {
         try {
-            jarFile = new File(UnixDomainSocket.class
-                               .getProtectionDomain()
-                               .getCodeSource()
-                               .getLocation()
-                               .toURI());
+            jarFile = new File(JUDS.jarURL.toURI());
         } catch(URISyntaxException e) {
             throwLink(e);
         }
@@ -131,17 +134,6 @@ public abstract class UnixDomainSocket {
         return p;
     }
 
-
-    /**
-     * A constant for the datagram socket type (connectionless).
-     */
-    public static final int SOCK_DGRAM = 0;
-
-    /**
-     * A constant for the stream oriented stream socket type (connection-based)
-     */
-    public static final int SOCK_STREAM = 1;
-
     protected UnixDomainSocketInputStream in;
 
     protected UnixDomainSocketOutputStream out;
@@ -192,7 +184,7 @@ public abstract class UnixDomainSocket {
 
         // Initialize the socket input and output streams
         in = new UnixDomainSocketInputStream();
-        if (socketType == UnixDomainSocket.SOCK_STREAM)
+        if (socketType == JUDS.SOCK_STREAM)
             out = new UnixDomainSocketOutputStream();
 
     }

@@ -10,3 +10,4 @@ config.log
 config.h
 aclocal.m4
 *dSYM
+*tar.gz
