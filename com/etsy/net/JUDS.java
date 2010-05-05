@@ -38,7 +38,7 @@ public class JUDS {
                InvocationTargetException {
 
         String name = (type == SERVER) ? "Server" : "Client";
-        Class c = Class.forName("com.google.code.juds.UnixDomainSocket"+name, 
+        Class c = Class.forName("com.etsy.net.UnixDomainSocket"+name, 
                                 true, judsCl);
         
         Constructor ctor = c.getConstructor(new Class[] { 

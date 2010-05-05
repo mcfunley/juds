@@ -14,6 +14,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 
+
 /**
  * 
  * This class provides a means of using Unix domain socket client/server
@@ -26,15 +27,8 @@ public abstract class UnixDomainSocket {
     private static File jarFile;
     static {
         // Load the Unix domain socket C library
-        if(!isLoaded()) {
-            getJarPath();
-            loadNativeLib();
-            System.setProperty("juds.loaded", "true");
-        }
-    }
-
-    private static Boolean isLoaded() {
-        return "true".equals(System.getProperty("juds.loaded"));
+        getJarPath();
+        loadNativeLib();
     }
 
     private static void getJarPath() {
