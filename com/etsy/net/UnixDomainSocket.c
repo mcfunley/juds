@@ -43,7 +43,7 @@ socklen_t sockaddr_init(const char* socketFile, struct sockaddr_un* sa) {
 
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
                             jclass jClass,
                             jstring jSocketFile,
                             jint jSocketType)
@@ -75,7 +75,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeListen(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeListen(JNIEnv * jEnv,
                             jclass jClass,
                             jstring jSocketFile,
                             jint jSocketType,
@@ -105,7 +105,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeListen(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeAccept(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeAccept(JNIEnv * jEnv,
                             jclass jClass,
                             jint jSocketFileHandle,
                             jint jSocketType)
@@ -124,7 +124,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeAccept(JNIEnv * jEnv,
 
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
                               jclass jClass,
                               jstring jSocketFile,
                               jint jSocketType)
@@ -147,7 +147,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
                               jclass jClass,
                               jint jSocketFileHandle,
                               jbyteArray jbarr,
@@ -173,7 +173,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeWrite(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeWrite(JNIEnv * jEnv,
                                jclass jClass,
                                jint jSocketFileHandle,
                                jbyteArray jbarr,
@@ -194,7 +194,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeWrite(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeClose(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeClose(JNIEnv * jEnv,
                                jclass jClass,
                                jint jSocketFileHandle)
 {
@@ -202,7 +202,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeClose(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeCloseInput(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeCloseInput(JNIEnv * jEnv,
                                 jclass jClass,
                                 jint
                                 jSocketFileHandle)
@@ -212,7 +212,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCloseInput(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeCloseOutput(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeCloseOutput(JNIEnv * jEnv,
                                  jclass jClass,
                                  jint
                                  jSocketFileHandle)
@@ -222,7 +222,7 @@ Java_com_google_code_juds_UnixDomainSocket_nativeCloseOutput(JNIEnv * jEnv,
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_code_juds_UnixDomainSocket_nativeUnlink(JNIEnv * jEnv,
+Java_com_etsy_net_UnixDomainSocket_nativeUnlink(JNIEnv * jEnv,
                             jclass jClass,
                             jstring jSocketFile)
 {
