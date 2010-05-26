@@ -28,7 +28,11 @@ public abstract class UnixDomainSocket {
     static {
         // Load the Unix domain socket C library
         getJarPath();
-        loadNativeLib();
+        try {
+            loadNativeLib();
+        } catch (IOException ioe) {
+            throwLink(ioe);
+        }
     }
 
     private static void getJarPath() {
@@ -39,7 +43,7 @@ public abstract class UnixDomainSocket {
         }
     }
 
-    private static void loadNativeLib() {
+    private static void loadNativeLib() throws IOException {
         File lib = getNativeLibTarget();
         if(!lib.exists() || jarNewer(lib)) {
             try {
@@ -74,12 +78,26 @@ public abstract class UnixDomainSocket {
         throw new UnsatisfiedLinkError(s);
     }
 
-    private static File getNativeLibTarget() {
+    private static File getNativeLibTarget() throws IOException {
         String p = platform();
         String ext = "darwin".equals(p) ? "dylib" : "so";
-        String path = String.format(
-            "/var/tmp/libunixdomainsocket-%s-%s.%s", p, arch(), ext);
-        return new File(path);
+
+        File tmpdir = File.createTempFile("juds-temp", Long.toString(System.nanoTime()));
+
+        if(!(tmpdir.delete())) {
+            throw new IOException("Could not delete temp file: " + tmpdir.getAbsolutePath());
+        }
+
+        if(!(tmpdir.mkdir())) {
+            throw new IOException("Could not create temp directory: " + tmpdir.getAbsolutePath());
+        }
+
+        tmpdir.deleteOnExit();
+
+        String path = String.format(tmpdir.getAbsolutePath() + "/libunixdomainsocket-%s-%s.%s", p, arch(), ext);
+        File lib = new File(path);
+        lib.deleteOnExit();
+        return lib;
     }
 
     private static void extractNativeLib(File target) 
