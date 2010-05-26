@@ -164,6 +164,8 @@ Klaus Trainer - original author.
 
 Philippe Lhardy
 
+Mathias Herberts
+
 Dan McKinley - current maintainer. 
 
 
