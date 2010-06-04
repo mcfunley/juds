@@ -166,6 +166,8 @@ Philippe Lhardy
 
 Mathias Herberts
 
+Richard Moats
+
 Dan McKinley - current maintainer. 
 
 
