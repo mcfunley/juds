@@ -137,8 +137,12 @@ Java_com_etsy_net_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 
     s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
     ASSERTNOERR(s == -1, "nativeOpen: socket");
-    ASSERTNOERR(connect(s, (struct sockaddr *)&sa, salen) == -1,
-            "nativeOpen: connect");
+    if (connect(s, (struct sockaddr *)&sa, salen) == -1) {
+	perror("nativeOpen: connect");
+	int close = close(s);
+	ASSERTNOERR(close == -1, "nativeOpen: close connect error socket");
+	return -1;
+    }
 
     (*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
 
