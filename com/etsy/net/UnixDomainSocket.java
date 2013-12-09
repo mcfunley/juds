@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 
@@ -103,13 +104,22 @@ public abstract class UnixDomainSocket {
     private static void extractNativeLib(File target) 
         throws IOException, URISyntaxException {
 
-        JarFile jar = new JarFile(jarFile);
-        ZipEntry z = jar.getEntry(target.getName());
-        if(z == null) {
-            throwLink("Could not find library: "+target.getName());
+        InputStream in;
+        // Hadoop extracts the jar into a directory before running the code, so
+        // check to see if the file is already there, since the .jar extraction
+        // will fail in this case.
+        String preExtractedLibPath = jarFile.getCanonicalPath() + "/" + target.getName();
+        File preExtractedLibFile = new File(preExtractedLibPath);
+        if (preExtractedLibFile.exists()) {
+          in = new FileInputStream(preExtractedLibFile);
+        } else {
+          JarFile jar = new JarFile(jarFile);
+          ZipEntry z = jar.getEntry(target.getName());
+          if(z == null) {
+              throwLink("Could not find library: "+target.getName());
+          }
+          in = jar.getInputStream(z);
         }
-
-        InputStream in = jar.getInputStream(z);
         try {
             OutputStream out = new BufferedOutputStream(
                 new FileOutputStream(target));
