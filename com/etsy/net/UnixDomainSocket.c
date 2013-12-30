@@ -131,6 +131,7 @@ Java_com_etsy_net_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 {
     int s;            /* socket file handle */
     struct sockaddr_un sa;
+    struct timeval timeout;
     const char *socketFile =
         (*jEnv)->GetStringUTFChars(jEnv, jSocketFile, NULL);
     socklen_t salen = sockaddr_init(socketFile, &sa);
@@ -142,6 +143,16 @@ Java_com_etsy_net_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
 	int close_ = close(s);
 	ASSERTNOERR(close_ == -1, "nativeOpen: close connect error socket");
 	return -1;
+    }
+
+    timeout.tv_sec = 10;
+    timeout.tv_usec = 0;
+    if (setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0) {
+        perror("nativeOpen: setsockopt SO_RCVTIMEO failed");
+    }
+
+    if (setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0) {
+        perror("nativeOpen: setsockopt SO_SNDTIMEO failed");
     }
 
     (*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
