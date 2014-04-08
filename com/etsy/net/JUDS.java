@@ -23,10 +23,22 @@ public class JUDS {
     public static final int CLIENT = 1;
 
 
-    static URL jarURL = JUDS.class
-        .getProtectionDomain()
-        .getCodeSource()
-        .getLocation();
+    static URL jarURL;
+    
+    static {
+        if(System.getenv(JUDSDIR) != null) {
+                try {
+                        jarURL = new File(System.getenv(JUDSDIR)).toURI().toURL();
+                } catch (MalformedURLException e) {
+                        throw new RuntimeException("Unable to create URL from path " + System.getenv(JUDSDIR));
+                }
+        } else {
+                jarURL = JUDS.class
+                        .getProtectionDomain()
+                        .getCodeSource()
+                        .getLocation();
+        }
+    }
 
     private static ClassLoader judsCl = new URLClassLoader(
         new URL[] { jarURL },
