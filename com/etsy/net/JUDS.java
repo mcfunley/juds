@@ -29,16 +29,16 @@ public class JUDS {
     
     static {
         if(System.getenv("JUDSDIR") != null) {
-                try {
-                        jarURL = new File(System.getenv("JUDSDIR")).toURI().toURL();
-                } catch (MalformedURLException e) {
-                        throw new RuntimeException("Unable to create URL from path " + System.getenv("JUDSDIR"));
-                }
+            try {
+                jarURL = new File(System.getenv("JUDSDIR")).toURI().toURL();
+            } catch (MalformedURLException e) {
+                throw new RuntimeException("Unable to create URL from path " + System.getenv("JUDSDIR"));
+            }
         } else {
-                jarURL = JUDS.class
-                        .getProtectionDomain()
-                        .getCodeSource()
-                        .getLocation();
+            jarURL = JUDS.class
+                .getProtectionDomain()
+                .getCodeSource()
+                .getLocation();
         }
     }
 
