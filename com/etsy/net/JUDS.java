@@ -4,6 +4,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
 import java.net.URL;
+import java.io.File;
+import java.net.MalformedURLException;
 
 
 public class JUDS {
@@ -26,11 +28,11 @@ public class JUDS {
     static URL jarURL;
     
     static {
-        if(System.getenv(JUDSDIR) != null) {
+        if(System.getenv("JUDSDIR") != null) {
                 try {
-                        jarURL = new File(System.getenv(JUDSDIR)).toURI().toURL();
+                        jarURL = new File(System.getenv("JUDSDIR")).toURI().toURL();
                 } catch (MalformedURLException e) {
-                        throw new RuntimeException("Unable to create URL from path " + System.getenv(JUDSDIR));
+                        throw new RuntimeException("Unable to create URL from path " + System.getenv("JUDSDIR"));
                 }
         } else {
                 jarURL = JUDS.class
