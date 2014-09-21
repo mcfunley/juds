@@ -8,6 +8,7 @@ config.status
 Makefile
 config.log
 config.h
+configure
 aclocal.m4
 *dSYM
 *tar.gz
