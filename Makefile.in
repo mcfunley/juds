@@ -65,10 +65,10 @@ $(PACKAGE_DIR)/UnixDomainSocketServer.class: $(PACKAGE_DIR)/UnixDomainSocketServ
 	$(JAVAC) $(JAVA_FLAGS) $?
 
 install: nativelib
-	cp $(NATIVELIB) $(PREFIX)/lib
+	cp $(LIB32) $(LIB64) $(PREFIX)/lib
 
 uninstall:
-	rm -f $(PREFIX)/lib/$(NATIVELIB)
+	rm -f $(PREFIX)/lib/$(LIB32) $(PREFIX)/lib/$(LIB64)
 
 test: test/TestUnixDomainSocket.class test/TestUnixDomainSocketServer.class
 	python test/TestUnixDomainSocket.py $(TEST_SOCKET_FILE) &
