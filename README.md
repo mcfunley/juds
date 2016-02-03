@@ -1,7 +1,9 @@
 JUDS
 ====
 
-![Build status](https://api.travis-ci.org/mcfunley/juds.svg)(https://travis-ci.org/mcfunley/juds)
+<a href="https://travis-ci.org/mcfunley/juds">
+  <img src="https://api.travis-ci.org/mcfunley/juds.svg" alt="Build Status">
+</a>
 
 ABSTRACT
 --------
