@@ -1,6 +1,7 @@
 JUDS
 ====
 
+![Build status](https://api.travis-ci.org/mcfunley/juds.svg)(https://travis-ci.org/mcfunley/juds)
 
 ABSTRACT
 --------
@@ -53,7 +54,7 @@ VERSION HISTORY
 Version 0.94 - 2010-04-30
     - Now builds on OSX.
     - Build system switched to autoconf.
-    - Native libraries are now embedded in the jar. 
+    - Native libraries are now embedded in the jar.
     - Support for universal jars.
     - Mainline repository moved to: http://github.com/mcfunley/juds.
     - Refactored native library.
@@ -154,7 +155,7 @@ http://www.opensource.org/licenses/lgpl-license.html
 http://www.gnu.org/copyleft/lesser.html
 
 To obtain a written copy of the GNU Lesser General Public License,
-please write to the Free Software Foundation, Inc., 59 Temple Place, 
+please write to the Free Software Foundation, Inc., 59 Temple Place,
 Suite 330, Boston, MA  02111-1307 USA
 
 
@@ -168,7 +169,7 @@ Mathias Herberts
 
 Richard Moats
 
-Dan McKinley - current maintainer. 
+Dan McKinley - current maintainer.
 
 
 ACKNOWLEDGMENTS
