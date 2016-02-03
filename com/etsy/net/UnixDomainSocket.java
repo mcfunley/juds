@@ -25,6 +25,9 @@ import java.net.URISyntaxException;
  */
 public abstract class UnixDomainSocket {
 
+    // system property holding the preferred folder for copying the lib file to
+    private static final String LIB_TARGET = "juds.folder.preferred";
+
     private static File jarFile;
     static {
         // Load the Unix domain socket C library
@@ -83,21 +86,33 @@ public abstract class UnixDomainSocket {
         String p = platform();
         String ext = "darwin".equals(p) ? "dylib" : "so";
 
-        File tmpdir = File.createTempFile("juds-temp", Long.toString(System.nanoTime()));
+        File tmpdir;
+        String preferred = System.getProperty(LIB_TARGET);
+        if (preferred != null) {
+            tmpdir = new File(preferred);
 
-        if(!(tmpdir.delete())) {
-            throw new IOException("Could not delete temp file: " + tmpdir.getAbsolutePath());
+            if(!(tmpdir.isDirectory())) {
+                throw new IOException("The preffered path is not a folder: " + tmpdir.getAbsolutePath());
+            }
+        } else {
+            tmpdir = File.createTempFile("juds-temp", Long.toString(System.nanoTime()));
+
+            if(!(tmpdir.delete())) {
+                throw new IOException("Could not delete temp file: " + tmpdir.getAbsolutePath());
+            }
+
+            if(!(tmpdir.mkdir())) {
+                throw new IOException("Could not create temp directory: " + tmpdir.getAbsolutePath());
+            }
+
+            tmpdir.deleteOnExit();
         }
 
-        if(!(tmpdir.mkdir())) {
-            throw new IOException("Could not create temp directory: " + tmpdir.getAbsolutePath());
+        String path = String.format("libunixdomainsocket-%s-%s.%s", p, arch(), ext);
+        File lib = new File(tmpdir, path);
+        if (preferred == null) {
+            lib.deleteOnExit();
         }
-
-        tmpdir.deleteOnExit();
-
-        String path = String.format(tmpdir.getAbsolutePath() + "/libunixdomainsocket-%s-%s.%s", p, arch(), ext);
-        File lib = new File(path);
-        lib.deleteOnExit();
         return lib;
     }
 
