@@ -35,10 +35,30 @@ public class JUDS {
                 throw new RuntimeException("Unable to create URL from path " + System.getenv("JUDSDIR"));
             }
         } else {
-            jarURL = JUDS.class
+            URL url = JUDS.class
                 .getProtectionDomain()
                 .getCodeSource()
                 .getLocation();
+
+            URL prepared = null;
+            if ("jar".equals(url.getProtocol()) || "wsjar".equals(url.getProtocol())) {
+                String filePath = url.getPath();
+                int end = filePath.indexOf("!/");
+                if (end >= 0) {
+                    filePath = filePath.substring(0, end);
+                    if (filePath.contains("file://") && !filePath.contains("file:////")) {
+                        filePath = filePath.replaceFirst("file://", "file:////");
+                    }
+                    try {
+                        prepared = new URL(filePath);
+                    } catch (MalformedURLException ex) {
+                    }
+                }
+            }
+            if (prepared == null) {
+                prepared = url;
+            }
+            jarURL = prepared;
         }
     }
 
