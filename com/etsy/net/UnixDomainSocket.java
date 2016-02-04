@@ -318,7 +318,7 @@ public abstract class UnixDomainSocket {
             int count = nativeRead(nativeSocketFileHandle, b, off, len);
             if (count == -1)
                 throw new IOException();
-            return count;
+            return count > 0 ? count : -1;
         }
 
         // Closes the socket input stream
