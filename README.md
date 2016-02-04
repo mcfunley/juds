@@ -47,11 +47,16 @@ an independent socket for each new incoming connection.
 VERSION
 =======
 
-Version 0.94 - 2010-04-30
+Version 0.95 - 2016-02-04
 
 
 VERSION HISTORY
 ===============
+
+Version 0.95 - 2016-02-04
+    - Socket timeout.
+    - Possibility to specify a folder for unpacked native library.
+    - Minor bug fixes.
 
 Version 0.94 - 2010-04-30
     - Now builds on OSX.

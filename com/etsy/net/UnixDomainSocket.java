@@ -199,6 +199,8 @@ public abstract class UnixDomainSocket {
     protected native static int nativeWrite(int nativeSocketFileHandle,
             byte[] b, int off, int len);
 
+    protected native static int nativeTimeout(int nativeSocketFileHandle, int milis);
+
     protected native static int nativeClose(int nativeSocketFileHandle);
 
     protected native static int nativeCloseInput(int nativeSocketFileHandle);
@@ -252,11 +254,27 @@ public abstract class UnixDomainSocket {
      * @param timeout
      *            The specified timeout, in milliseconds.
      */
+    @Deprecated
     public void setTimeout(int timeout) {
+        try {
+            setSoTimeout(timeout);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Deprecated
+    public int getTimeout() {
+        return getSoTimeout();
+    }
+
+    public void setSoTimeout(int timeout) throws IOException {
+        if(nativeTimeout(nativeSocketFileHandle, timeout) == -1)
+            throw new IOException("Unable to configure socket timeout");
         this.timeout = timeout;
     }
 
-    public int getTimeout() {
+    public int getSoTimeout() {
         return timeout;
     }
 
@@ -281,33 +299,9 @@ public abstract class UnixDomainSocket {
         @Override
         public int read() throws IOException {
             byte[] b = new byte[1];
-            int count;
-            // If a timeout is set, then use a read thread
-            if (timeout > 0) {
-                // Create a thread to read the byte
-                UnixDomainSocketReadThread thread = new UnixDomainSocketReadThread(
-                        b, 0, 1);
-                thread.setDaemon(true);
-                thread.start();
-                try {
-                    // Wait up until the specified timeout for the thread to
-                    // complete
-                    thread.join(timeout);
-                } catch (InterruptedException e) {
-                }
-                // If the thread is still alive the read() call has
-                // blocked longer than the specified timeout
-                if (thread.isAlive()) {
-                    throw new InterruptedIOException(
-                            "Unix domain socket read() call timed out");
-                } else {
-                    count = thread.getData();
-                }
-            } else {
-                count = nativeRead(nativeSocketFileHandle, b, 0, 1);
-                if (count == -1)
-                    throw new IOException();
-            }
+            int count = nativeRead(nativeSocketFileHandle, b, 0, 1);
+            if (count == -1)
+                throw new IOException();
             return count > 0 ? (int) b[0] & 0xff : -1;
         }
 
@@ -321,33 +315,9 @@ public abstract class UnixDomainSocket {
                 return 0;
             }
 
-            int count;
-            // If a timeout is set, then use a read thread
-            if (timeout > 0) {
-                // Create a thread to read the byte
-                UnixDomainSocketReadThread thread = new UnixDomainSocketReadThread(
-                        b, off, len);
-                thread.setDaemon(true);
-                thread.start();
-                try {
-                    // Wait up until the specified timeout for the thread to
-                    // complete
-                    thread.join(timeout);
-                } catch (InterruptedException e) {
-                }
-                // If the thread is still alive the read() call has
-                // blocked longer than the specified timeout
-                if (thread.isAlive()) {
-                    throw new InterruptedIOException(
-                            "Unix domain socket read() call timed out");
-                } else {
-                    count = thread.getData();
-                }
-            } else {
-                count = nativeRead(nativeSocketFileHandle, b, off, len);
-                if (count == -1)
-                    throw new IOException();
-            }
+            int count = nativeRead(nativeSocketFileHandle, b, off, len);
+            if (count == -1)
+                throw new IOException();
             return count;
         }
 
@@ -383,26 +353,6 @@ public abstract class UnixDomainSocket {
         // Closes the socket output stream
         public void close() throws IOException {
             nativeCloseOutput(nativeSocketFileHandle);
-        }
-    }
-
-    protected class UnixDomainSocketReadThread extends Thread {
-        private int count, off, len;
-
-        private byte[] b;
-
-        public UnixDomainSocketReadThread(byte[] b, int off, int len) {
-            this.b = b;
-            this.off = off;
-            this.len = len;
-        }
-
-        public void run() {
-            count = nativeRead(nativeSocketFileHandle, b, off, len);
-        }
-
-        public int getData() {
-            return count;
         }
     }
 }
