@@ -167,11 +167,6 @@ Java_com_etsy_net_UnixDomainSocket_nativeRead(JNIEnv * jEnv,
 
     (*jEnv)->ReleaseByteArrayElements(jEnv, jbarr, cbarr, 0);
 
-    // end of stream ( 0 in 'C' API should be -1 in java.io.InputStream API )
-    if ( count == 0 )
-      {
-        count = -1;
-      }
     /* return the number of bytes read */
     return count;
 }
