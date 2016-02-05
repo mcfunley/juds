@@ -209,6 +209,7 @@ Java_com_etsy_net_UnixDomainSocket_nativeClose(JNIEnv * jEnv,
                                jclass jClass,
                                jint jSocketFileHandle)
 {
+    shutdown(jSocketFileHandle, SHUT_RDWR);
     return close(jSocketFileHandle);
 }
 
