@@ -113,14 +113,18 @@ INSTALLATION
 The java UnixDomainSocket classes use native methods in order to access AF_UNIX
 sockets for interprocess communication. JUDS can be installed by using the
 included makefile.
-IMPORTANT NOTE:  In order for the compilation process to work, it is likely
+IMPORTANT NOTE: In order for the compilation process to work, it is likely
 that you need to change one or more of the top four variables in the makefile.
 By example please select you right jdk by edeting Makefile JAVA_HOME .
 
+You should also make sure you have the 'autoconf' and 'libc6-dev-i386' packages installed.
 A installation process could look like this:
 
+	sudo apt-get install libc6-dev-i386 autoconf
+	./autoconf.sh
+	./configure
 	make
-	make install
+	sudo make install
 
 make install does nothing more than copying the shared library
 libunixdomainsocket.so to the /usr/lib directory. Alternatively you can also
