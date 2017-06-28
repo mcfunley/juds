@@ -9,6 +9,10 @@ def main():
         print ("usage: %s socketfilename" % sys.argv[0])
         sys.exit(1)
     socket_file = sys.argv[1]
+    try:
+        os.unlink(socket_file)
+    except OSError:
+        pass
 
     # Testcase 1.1: Test UnixDomainSocketClient with a stream socket
     print ("Test #1: Test UnixDomainSocketClient\n"
@@ -62,6 +66,16 @@ def main():
 
     # Testcase 2.2: Test UnixDomainSocketServer with a datagram socket
     s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+    s.connect(socket_file)
+    text = "[6] Hello I'm the client!"
+    s.send(text)
+    print ("Text sent: \"%s\"" % text)
+    s.close()
+
+    time.sleep(1)   # wait for the server
+
+    # Testcase 2.3: Test UnixDomainSocketServer with a seqpacket socket
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
     s.connect(socket_file)
     text = "[6] Hello I'm the client!"
     s.send(text)
