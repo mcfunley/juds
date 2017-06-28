@@ -18,10 +18,6 @@
 #define ASSERTNOERR(cond, msg) do { \
     if (cond) { fprintf(stderr, "[%d] ", errno); perror(msg); return -1; }} while(0)
 
-/* In the class UnixDomainSocket SOCK_DGRAM and SOCK_STREAM correspond to the
- * constant values 0 and 1; SOCK_TYPE replaces them with the respective macro */
-#define SOCK_TYPE(type) ((type) == 0 ? SOCK_DGRAM : SOCK_STREAM)
-
 
 #ifndef SUN_LEN
 #define SUN_LEN(su) \
@@ -56,13 +52,13 @@ Java_com_etsy_net_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
     socklen_t salen = sockaddr_init(socketFile, &sa);
 
     /* create the socket */
-    s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
+    s = socket(PF_UNIX, jSocketType, 0);
     ASSERTNOERR(s == -1, "nativeCreate: socket");
 
     /* bind to the socket; here the socket file is created */
     ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
             "nativeCreate: bind");
-    if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
+    if (jSocketType == SOCK_STREAM) {
         ASSERTNOERR(listen(s, 0) == -1, "nativeCreate: listen");
         s = accept(s, (struct sockaddr *)&sa, &salen);
         ASSERTNOERR(s == -1, "nativeCreate: accept");
@@ -88,13 +84,13 @@ Java_com_etsy_net_UnixDomainSocket_nativeListen(JNIEnv * jEnv,
     socklen_t salen = sockaddr_init(socketFile, &sa);
 
     /* create the socket */
-    s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
+    s = socket(PF_UNIX, jSocketType, 0);
     ASSERTNOERR(s == -1, "nativeListen: socket");
 
     /* bind to the socket; here the socket file is created */
     ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
             "nativeListen: bind");
-    if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
+    if (jSocketType == SOCK_STREAM) {
         ASSERTNOERR(listen(s, jBacklog) == -1, "nativeListen: listen");
     }
 
@@ -113,7 +109,7 @@ Java_com_etsy_net_UnixDomainSocket_nativeAccept(JNIEnv * jEnv,
     int s = -1;            /* socket file handle */
 
     ASSERTNOERR(jSocketFileHandle == -1, "nativeAccept: socket");
-    if (SOCK_TYPE(jSocketType) == SOCK_STREAM) {
+    if (jSocketType == SOCK_STREAM) {
         s = accept(jSocketFileHandle, NULL, 0);
         ASSERTNOERR(s == -1, "nativeAccept: accept");
     }
@@ -135,7 +131,7 @@ Java_com_etsy_net_UnixDomainSocket_nativeOpen(JNIEnv * jEnv,
         (*jEnv)->GetStringUTFChars(jEnv, jSocketFile, NULL);
     socklen_t salen = sockaddr_init(socketFile, &sa);
 
-    s = socket(PF_UNIX, SOCK_TYPE(jSocketType), 0);
+    s = socket(PF_UNIX, jSocketType, 0);
     ASSERTNOERR(s == -1, "nativeOpen: socket");
     if (connect(s, (struct sockaddr *)&sa, salen) == -1) {
 	perror("nativeOpen: connect");
@@ -247,5 +243,40 @@ Java_com_etsy_net_UnixDomainSocket_nativeUnlink(JNIEnv * jEnv,
 
     (*jEnv)->ReleaseStringUTFChars(jEnv, jSocketFile, socketFile);
 
+    return ret;
+}
+
+
+#define CMP_ASN(ret,sock,sockStr) (-1!=(ret=(0==strcmp(#sock,sockStr))?sock:-1))
+
+JNIEXPORT jint JNICALL Java_com_etsy_net_UnixDomainSocket_nativeGetSocketType
+  (JNIEnv * jEnv, jclass cls, jstring jSocketType){
+    int ret=-1;
+    const char *socketType=(*jEnv)->GetStringUTFChars(jEnv, jSocketType, NULL);
+    do{
+        #ifdef SOCK_STREAM
+        if(CMP_ASN(ret,SOCK_STREAM,socketType)) break;
+        #endif
+        #ifdef SOCK_DGRAM
+        if(CMP_ASN(ret,SOCK_DGRAM,socketType)) break;
+        #endif
+        #ifdef SOCK_RAW
+        if(CMP_ASN(ret,SOCK_RAW,socketType)) break;
+        #endif
+        #ifdef SOCK_RDM
+        if(CMP_ASN(ret,SOCK_RDM,socketType)) break;
+        #endif
+        #ifdef SOCK_SEQPACKET
+        if(CMP_ASN(ret,SOCK_SEQPACKET,socketType)) break;
+        #endif
+        #ifdef SOCK_DCCP
+        if(CMP_ASN(ret,SOCK_DCCP,socketType)) break;
+        #endif
+        #ifdef SOCK_PACKET
+        if(CMP_ASN(ret,SOCK_PACKET,socketType)) break;
+        #endif
+    }while(0);
+       
+    (*jEnv)->ReleaseStringUTFChars(jEnv, jSocketType, socketType);
     return ret;
 }

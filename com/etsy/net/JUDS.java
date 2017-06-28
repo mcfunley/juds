@@ -13,14 +13,14 @@ public class JUDS {
     /**
      * A constant for the datagram socket type (connectionless).
      */
-    public static final int SOCK_DGRAM = 0;
+    public static final int SOCK_DGRAM; 
 
     /**
      * A constant for the stream oriented stream socket type (connection-based)
      */
-    public static final int SOCK_STREAM = 1;
+    public static final int SOCK_STREAM; 
+    public static final int SOCK_SEQPACKET; 
 
-    
     public static final int SERVER = 0;
     public static final int CLIENT = 1;
 
@@ -60,6 +60,11 @@ public class JUDS {
             }
             jarURL = prepared;
         }
+        
+        UnixDomainSocket.staticInit();
+        SOCK_DGRAM = UnixDomainSocket.nativeGetSocketType("SOCK_DGRAM");
+        SOCK_STREAM = UnixDomainSocket.nativeGetSocketType("SOCK_STREAM");
+        SOCK_SEQPACKET = UnixDomainSocket.nativeGetSocketType("SOCK_SEQPACKET");
     }
 
     private static ClassLoader judsCl = new URLClassLoader(
