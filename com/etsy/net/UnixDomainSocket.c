@@ -58,7 +58,7 @@ Java_com_etsy_net_UnixDomainSocket_nativeCreate(JNIEnv * jEnv,
     /* bind to the socket; here the socket file is created */
     ASSERTNOERR(bind(s, (struct sockaddr *)&sa, salen) == -1,
             "nativeCreate: bind");
-    if (jSocketType == SOCK_STREAM) {
+    if (jSocketType == SOCK_STREAM || jSocketType == SOCK_SEQPACKET) {
         ASSERTNOERR(listen(s, 0) == -1, "nativeCreate: listen");
         s = accept(s, (struct sockaddr *)&sa, &salen);
         ASSERTNOERR(s == -1, "nativeCreate: accept");
