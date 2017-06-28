@@ -46,6 +46,23 @@ public class TestUnixDomainSocket {
 		System.out.println("Text sent: \"" + text + "\"");
 		socket.close();
 
+        Thread.sleep(2000);
+
+		// Testcase 1.3: Test UnixDomainSocketClient with a SEQPACKET socket
+		socket = new UnixDomainSocketClient(socketFile,JUDS.SOCK_SEQPACKET);
+		System.out.println("Provoke and catch an "
+				+ "UnsupportedOperationException:");
+		try {
+			in = socket.getInputStream();
+		} catch (UnsupportedOperationException e) {
+			System.out.println("UnsupportedOperationException has been "
+					+ "thrown as expected.");
+		}
+		out = socket.getOutputStream();
+		text = "[3] Hello! I'm the client!";
+		out.write(text.getBytes());
+		System.out.println("Text sent: \"" + text + "\"");
+		socket.close();
 
 		// Testcase 2.1: Test UnixDomainSocketServer with a stream socket
 		System.out.println("\nTest #2: Test UnixDomainSocketServer\nTestcase "

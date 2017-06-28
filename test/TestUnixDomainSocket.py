@@ -36,6 +36,18 @@ def main():
     
     time.sleep(1)   # wait for the server
 
+    # Testcase 1.3: Test UnixDomainSocketClient with a seqpacket socket
+    print ("Testcase 1.3: Test UnixDomainSocketClient with a seqpacket socket...")
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    s.bind(socket_file)
+    s.listen(0)
+    client, client_address = s.accept()
+    text = client.recv(BUFSIZE)
+    print ("Text received: \"%s\"" % text)
+    s.close()
+    os.unlink(socket_file)
+
+    time.sleep(1)   # wait for the server
     # Testcase 2.1: Test UnixDomainSocketServer with a stream socket
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     s.connect(socket_file)
