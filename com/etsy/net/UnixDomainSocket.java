@@ -30,6 +30,10 @@ public abstract class UnixDomainSocket {
 
     private static File jarFile;
     static {
+        staticInit();
+    }
+
+    static void staticInit(){
         // Load the Unix domain socket C library
         getJarPath();
         try {
@@ -208,6 +212,8 @@ public abstract class UnixDomainSocket {
     protected native static int nativeCloseOutput(int nativeSocketFileHandle);
 
     protected native static int nativeUnlink(String socketFile);
+
+    protected native static int nativeGetSocketType(String socketType);
 
     protected UnixDomainSocket()
     {
